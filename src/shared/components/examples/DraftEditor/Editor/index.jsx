@@ -24,14 +24,34 @@ import TcBlock from '../TcBlock';
 
 import './style.scss';
 
+let blockCount = 0;
+
 export default class Editor extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      editableTcBlocks: Map(),
+      children: [],
       editorState: EditorState.createEmpty(),
+      readOnly: false,
     };
+    this.blockId = blockCount;
+    blockCount += 1;
+    if (props.register) props.register(this);
+  }
+
+  setEditable() {
+    this.setState({
+      readOnly: false,
+    });
+    this.state.children.forEach(child => child.setEditable());
+  }
+
+  setReadOnly() {
+    this.setState({
+      readOnly: true,
+    });
+    if (this.props.parent) this.props.parent.setReadOnly();
   }
 
   insertTcBlock() {
@@ -47,7 +67,7 @@ export default class Editor extends React.Component {
       editorState,
       { currentContent: content },
     );
-    editorState = AtomicBlockUtils.insertAtomicBlock(editorState, key, '');
+    editorState = AtomicBlockUtils.insertAtomicBlock(editorState, key, ' ');
     this.setState({ editorState });
   }
 
@@ -57,16 +77,14 @@ export default class Editor extends React.Component {
         component: TcBlock,
         editable: false,
         props: {
-          onFocused: () => {
+          parent: this,
+          register: (child) => {
+            const children = this.state.children.slice();
+            children.push(child);
             this.setState({
-              editableTcBlocks:
-                this.state.editableTcBlocks.set(block.getKey(), true),
+              children,
             });
           },
-          onBlured: () => this.setState({
-            editableTcBlocks:
-              this.state.editableTcBlocks.remove(block.getKey()),
-          }),
         },
       };
     }
@@ -74,11 +92,19 @@ export default class Editor extends React.Component {
   }
 
   render() {
+    const { parent } = this.props;
     const { editorState } = this.state;
+    const focus = editorState.getSelection().getHasFocus();
+    console.log('RENDER', this.blockId);
     return (
       <div
         onClick={(e) => {
-          this.props.onFocused();
+          console.log('CLICK', this.blockId);
+          if (!focus && parent) parent.setReadOnly();
+          this.setState({
+            readOnly: false,
+          }, () => this.editor.focus());
+          this.state.children.forEach(child => child.setEditable());
           e.stopPropagation();
         }}
         role="button"
@@ -86,25 +112,26 @@ export default class Editor extends React.Component {
       >
         <div styleName="toolbar">
           <button
-            onClick={() => {
+            onClick={(e) => {
               this.insertTcBlock();
+              e.stopPropagation();
             }}
-          >
-            test
-          </button>
+          >test</button>
         </div>
         <div styleName="content">
           <DraftEditor
             blockRendererFn={block => this.renderBlock(block)}
             editorState={editorState}
             onChange={(newEditorState) => {
-              const focused = newEditorState.getSelection().getHasFocus();
-              if (!focused) this.props.onBlured();
+              console.log('CHANGE', this.blockId);
+              const newFocus = newEditorState.getSelection().getHasFocus();
               this.setState({
                 editorState: newEditorState,
+                readOnly: !newFocus,
               });
             }}
-            readOnly={this.state.editableTcBlocks.count()}
+            readOnly={this.state.readOnly}
+            ref={(node) => { this.editor = node; }}
           />
         </div>
       </div>
@@ -113,11 +140,11 @@ export default class Editor extends React.Component {
 }
 
 Editor.defaultProps = {
-  onBlured: _.noop,
-  onFocused: _.noop,
+  parent: null,
 };
 
 Editor.propTypes = {
-  onBlured: PT.func,
-  onFocused: PT.func,
+  parent: PT.shape({
+    setReadOnly: PT.func.isRequired,
+  }),
 };

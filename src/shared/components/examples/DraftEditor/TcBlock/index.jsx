@@ -10,19 +10,19 @@ import Editor from '../Editor';
 
 import './style.scss';
 
-export default function TcBlock(props) {
+export default function TcBlock({ blockProps }) {
   return (
     <div>
       <div styleName="column">
         <Editor
-          onBlured={props.blockProps.onBlured}
-          onFocused={props.blockProps.onFocused}
+          parent={blockProps.parent}
+          register={blockProps.register}
         />
       </div>
       <div styleName="column">
         <Editor
-          onBlured={props.blockProps.onBlured}
-          onFocused={props.blockProps.onFocused}
+          parent={blockProps.parent}
+          register={blockProps.register}
         />
       </div>
     </div>
@@ -31,7 +31,6 @@ export default function TcBlock(props) {
 
 TcBlock.propTypes = {
   blockProps: PT.shape({
-    onBlured: PT.func,
-    onFocused: PT.func,
+    parent: PT.object,
   }).isRequired,
 };
