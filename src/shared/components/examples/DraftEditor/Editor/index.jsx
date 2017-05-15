@@ -11,6 +11,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import _ from 'lodash';
+import FaBeer from 'react-icons/fa/beer';
+import StandardToolbar from '../toolbars/Standard';
 import { Map } from 'immutable';
 import PT from 'prop-types';
 import React from 'react';
@@ -111,12 +113,19 @@ export default class Editor extends React.Component {
         styleName="editor"
       >
         <div styleName="toolbar">
+          <StandardToolbar
+            editorState={editorState}
+            setEditorState={state => this.setState({ editorState: state })}
+          />
+          {/*
+          <FaBeer />
           <button
             onClick={(e) => {
               this.insertTcBlock();
               e.stopPropagation();
             }}
           >test</button>
+          */}
         </div>
         <div styleName="content">
           <DraftEditor

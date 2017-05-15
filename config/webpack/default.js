@@ -21,7 +21,7 @@ module.exports = {
     }, {
       test: /\.(jsx?|svg)$/,
       exclude: [
-        /node_modules\/(?!appirio-tech.*|topcoder|tc-)/,
+        /node_modules\/(?!appirio-tech.*|react-icons|topcoder|tc-)/,
         /src\/assets\/fonts/,
       ],
       loader: 'babel-loader',
