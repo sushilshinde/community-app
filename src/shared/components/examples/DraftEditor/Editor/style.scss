@@ -1,17 +1,9 @@
 .editor {
-  padding: 12px;
-}
+  border: 1px dashed lightgray;
+  margin: 6px;
 
-.content,
-.toolbar {
-  border: 1px solid lightgray;
-}
-
-.toolbar {
-  background: whitesmoke;
-  padding: 5px;
-
-  button {
-    margin: 1px;
+  &:hover {
+    border: 1px dashed skyblue;
+    background: azure;
   }
 }

@@ -1,0 +1,26 @@
+.editor {
+  padding: 12px;
+}
+
+.content,
+.toolbar {
+  border: 1px solid lightgray;
+}
+
+.toolbar {
+  background: whitesmoke;;
+  position: fixed;
+  padding: 5px;
+  z-index: 2;
+
+  button {
+    background: whitesmoke;
+    border: 1px solid lightgray;
+    margin: 1px;
+
+    &:global.active {
+      background: lightgray;
+      border: 1px solid gray;
+    }
+  }
+}
