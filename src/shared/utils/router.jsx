@@ -32,12 +32,14 @@ function RRLinkWrapper(props) {
       <a
         className={props.className}
         href={props.to}
+        target={props.openExternalLinkInNewPage ? '_blank' : ''}
       >{props.children}</a>
     );
   }
   return (
     <RRLink
       className={props.className}
+      onClick={props.onClick}
       replace={props.replace}
       to={props.to}
     >{props.children}</RRLink>
@@ -47,6 +49,8 @@ function RRLinkWrapper(props) {
 RRLinkWrapper.defaultProps = {
   children: null,
   className: null,
+  onClick: null,
+  openExternalLinkInNewPage: false,
   replace: false,
 };
 
@@ -54,6 +58,8 @@ RRLinkWrapper.propTypes = {
   children: PT.node,
   className: PT.string,
   hostname: PT.string.isRequired,
+  onClick: PT.func,
+  openExternalLinkInNewPage: PT.bool,
   replace: PT.bool,
   to: PT.oneOfType([PT.object, PT.string]).isRequired,
 };
@@ -74,6 +80,7 @@ function RRNavLinkWrapper(props) {
       <a
         className={props.className}
         href={props.to}
+        target={props.openExternalLinkInNewPage ? '_blank' : ''}
       >{props.children}</a>
     );
   }
@@ -99,6 +106,7 @@ RRNavLinkWrapper.defaultProps = {
   className: null,
   exact: false,
   location: null,
+  openExternalLinkInNewPage: false,
   replace: false,
   strict: false,
 };
@@ -112,6 +120,7 @@ RRNavLinkWrapper.propTypes = {
   hostname: PT.string.isRequired,
   isActive: PT.func.isRequired,
   location: PT.shape(),
+  openExternalLinkInNewPage: PT.bool,
   replace: PT.bool,
   strict: PT.bool,
   to: PT.string.isRequired,

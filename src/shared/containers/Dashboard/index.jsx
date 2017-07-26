@@ -27,7 +27,7 @@ import LoadingIndicator from 'components/LoadingIndicator';
 import './styles.scss';
 
 // The container component
-class DashboardPageContainer extends React.Component {
+export class DashboardPageContainer extends React.Component {
 
   componentDidMount() {
     const {
@@ -37,7 +37,7 @@ class DashboardPageContainer extends React.Component {
       getCommunityStats,
     } = this.props;
     if (!tokenV2) {
-      location.href = `${config.URL.AUTH}?retUrl=${encodeURIComponent(location.href)}`;
+      location.href = `${config.URL.AUTH}/member?retUrl=${encodeURIComponent(location.href)}`;
       return false;
     }
     this.props.getBlogs();
