@@ -121,7 +121,7 @@ class ChallengeDetailPageContainer extends React.Component {
 
   componentDidMount() {
     const {
-      authTokens,
+      auth,
       challenge,
       communitiesList,
       getCommunitiesList,
@@ -131,13 +131,35 @@ class ChallengeDetailPageContainer extends React.Component {
       getSubtracks,
     } = this.props;
 
-    if (challenge.id !== challengeId) {
-      loadChallengeDetails(authTokens, challengeId);
+    if (
+      (challenge.id !== challengeId)
+
+      /* This extra condition allows to avoid the following subtle problem:
+       * if a user, logged in previously, access the challenge details page
+       * via a direct URL, the request to the server goes with an expired
+       * auth token, which is ignored, but server-side rendering still pulls
+       * the public details of the challenge from the API and they are
+       * injected into the served page. At the frontend side, due to the
+       * async loading of the JS chunk, the token can be refreshed before
+       * creation of this container, thus the container will be created
+       * with the new auth token, not able to detect that the token was
+       * updated, and thus the challenge details injected into the page
+       * during the server side rendering were fetched without it and
+       * should be reloaded to get protected portion of challenge details.
+       * This condition forces front-end reloading of the challenge details
+       * if auth tokens are known at the moment of container creation, but
+       * currently available challenge details have been fetched without
+       * authentication. */
+      || (auth.tokenV2 && auth.tokenV3
+        && !challenge.fetchedWithAuth)
+
+    ) {
+      loadChallengeDetails(auth, challengeId);
     }
 
     if (!communitiesList.loadingUuid
     && (Date.now() - communitiesList.timestamp > 10 * MIN)) {
-      getCommunitiesList(authTokens);
+      getCommunitiesList(auth);
     }
 
     if (_.isEmpty(challengeSubtracksMap)) {
@@ -146,14 +168,11 @@ class ChallengeDetailPageContainer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const userId = _.get(this, 'props.authTokens.user.userId');
-    const nextUserId = _.get(nextProps, 'authTokens.user.userId');
+    const userId = _.get(this, 'props.auth.user.userId');
+    const nextUserId = _.get(nextProps, 'auth.user.userId');
     if (userId !== nextUserId) {
-      nextProps.getCommunitiesList(nextProps.authTokens);
-    }
-
-    if (this.props.tokenV3 !== nextProps.tokenV3) {
-      this.props.reloadChallengeDetails(nextProps.authTokens, this.props.challengeId);
+      nextProps.getCommunitiesList(nextProps.auth);
+      this.props.reloadChallengeDetails(nextProps.auth, this.props.challengeId);
     }
   }
 
@@ -169,11 +188,11 @@ class ChallengeDetailPageContainer extends React.Component {
   }
 
   registerForChallenge() {
-    if (!this.props.authTokens.tokenV2) {
+    if (!this.props.auth.tokenV2) {
       const utmSource = this.props.communityId || 'community-app-main';
       location.href = `${config.URL.AUTH}/member?retUrl=${encodeURIComponent(location.href)}&utm_source=${utmSource}`;
-    } else if (_.every(this.getSubmitterTerms(), 'agreed')) {
-      this.props.registerForChallenge(this.props.authTokens, this.props.challengeId);
+    } else if (_.every(this.props.terms, 'agreed')) {
+      this.props.registerForChallenge(this.props.auth, this.props.challengeId);
     } else {
       this.props.openTermsModal(this.getSubmitterTerms());
     }
@@ -181,13 +200,12 @@ class ChallengeDetailPageContainer extends React.Component {
 
   render() {
     const {
-      authTokens,
+      auth,
       challenge,
       challengeId,
       challengesUrl,
       resultsLoadedForChallengeId,
       savingChallenge,
-      openTermsModal,
       updateChallenge,
     } = this.props;
 
@@ -214,7 +232,7 @@ class ChallengeDetailPageContainer extends React.Component {
 
     const hasRegistered = isRegistered(this.props.challenge.userDetails,
       this.props.challenge.registrants,
-      (this.props.authTokens.user || {}).handle);
+      (this.props.auth.user || {}).handle);
 
     if (this.props.isLoadingChallenge) return <LoadingPagePlaceholder />;
 
@@ -255,7 +273,7 @@ class ChallengeDetailPageContainer extends React.Component {
               selectedView={this.props.selectedTab}
               setChallengeListingFilter={this.props.setChallengeListingFilter}
               unregisterFromChallenge={() =>
-                this.props.unregisterFromChallenge(this.props.authTokens, this.props.challengeId)
+                this.props.unregisterFromChallenge(this.props.auth, this.props.challengeId)
               }
               unregistering={this.props.unregistering}
               checkpoints={this.props.checkpoints}
@@ -267,16 +285,16 @@ class ChallengeDetailPageContainer extends React.Component {
             !isEmpty && this.props.selectedTab === DETAIL_TABS.DETAILS &&
             <ChallengeDetailsView
               challenge={this.props.challenge}
+              challengesUrl={challengesUrl}
               communitiesList={this.props.communitiesList.data}
               introduction={this.props.challenge.introduction}
               detailedRequirements={this.props.challenge.detailedRequirements}
               terms={this.getSubmitterTerms()}
               hasRegistered={hasRegistered}
-              openTermsModal={openTermsModal}
               savingChallenge={savingChallenge}
               setSpecsTabState={this.props.setSpecsTabState}
               specsTabState={this.props.specsTabState}
-              updateChallenge={x => updateChallenge(x, authTokens.tokenV3)}
+              updateChallenge={x => updateChallenge(x, auth.tokenV3)}
             />
           }
           {
@@ -296,12 +314,7 @@ class ChallengeDetailPageContainer extends React.Component {
           }
           {
             !isEmpty && this.props.selectedTab === DETAIL_TABS.SUBMISSIONS &&
-            <Submissions
-              viewable={this.props.challenge.submissionsViewable === 'true'}
-              submissions={this.props.challenge.submissions}
-              checkpoints={this.props.challenge.checkpoints}
-              isDesign={this.props.challenge.track.toLowerCase() === 'design'}
-            />
+            <Submissions challenge={challenge} />
           }
           {
             !isEmpty && this.props.selectedTab === DETAIL_TABS.WINNERS &&
@@ -319,7 +332,7 @@ class ChallengeDetailPageContainer extends React.Component {
           entity={{ type: 'challenge', id: challengeId.toString() }}
           description="You are seeing these Terms & Conditions because you have registered to a challenge and you have to respect the terms below in order to be able to submit."
           register={() => {
-            this.props.registerForChallenge(this.props.authTokens, this.props.challengeId);
+            this.props.registerForChallenge(this.props.auth, this.props.challengeId);
           }}
         />
       </div>
@@ -335,11 +348,11 @@ ChallengeDetailPageContainer.defaultProps = {
   isLoadingChallenge: false,
   loadingCheckpointResults: false,
   results: null,
-  tokenV3: null,
+  terms: [],
 };
 
 ChallengeDetailPageContainer.propTypes = {
-  authTokens: PT.shape().isRequired,
+  auth: PT.shape().isRequired,
   challenge: PT.shape().isRequired,
   challengeId: PT.number.isRequired,
   challengeSubtracksMap: PT.shape().isRequired,
@@ -372,7 +385,6 @@ ChallengeDetailPageContainer.propTypes = {
   setSpecsTabState: PT.func.isRequired,
   specsTabState: PT.string.isRequired,
   toggleCheckpointFeedback: PT.func.isRequired,
-  tokenV3: PT.string,
   unregisterFromChallenge: PT.func.isRequired,
   unregistering: PT.bool.isRequired,
   updateChallenge: PT.func.isRequired,
@@ -380,7 +392,7 @@ ChallengeDetailPageContainer.propTypes = {
 
 function mapStateToProps(state, props) {
   return {
-    authTokens: state.auth,
+    auth: state.auth,
     challenge: state.challenge.details || {},
     challengeId: Number(props.match.params.challengeId),
     challengesUrl: props.challengesUrl,
@@ -399,8 +411,7 @@ function mapStateToProps(state, props) {
     savingChallenge: Boolean(state.challenge.updatingChallengeUuid),
     selectedTab: state.challenge.selectedTab || 'details',
     specsTabState: state.page.challengeDetails.specsTabState,
-    tokenV2: state.auth && state.auth.tokenV2,
-    tokenV3: state.auth && state.auth.tokenV3,
+    terms: state.terms.terms,
     unregistering: state.challenge.unregistering,
   };
 }

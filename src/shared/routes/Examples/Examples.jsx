@@ -3,7 +3,9 @@
  * available in this App code.
  */
 
+import Announcement from 'components/examples/Announcement';
 import Buttons from 'components/examples/Buttons';
+import ColorMixins from 'components/examples/ColorMixins';
 import Content from 'components/Content';
 import CssModules from 'components/examples/CssModules';
 import Editor from 'components/examples/Editor';
@@ -33,6 +35,7 @@ export default function Examples(props) {
   const base = props.match.url;
   return (
     <Switch>
+      <Route path={`${base}/announcement/:id`} component={Announcement} />
       <Route path={`${base}/buttons`} component={Buttons} />
       <SplitRoute
         cacheCss
@@ -51,6 +54,7 @@ export default function Examples(props) {
           return <CodeSplitting />;
         }}
       />
+      <Route path={`${base}/color-mixins`} component={ColorMixins} />
       <Route path={`${base}/css-modules`} component={CssModules} />
       <Route path={`${base}/data-fetch`} component={DataFetch} />
       <Route path={`${base}/editor`} component={Editor} />

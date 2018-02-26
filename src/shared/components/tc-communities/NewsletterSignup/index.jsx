@@ -7,9 +7,10 @@
 import fetch from 'isomorphic-fetch';
 import React from 'react';
 import PT from 'prop-types';
-import { PrimaryButton } from 'components/buttons';
+import { PrimaryButton } from 'topcoder-react-ui-kit';
 import { themr } from 'react-css-super-themr';
 import { fireErrorMessage } from 'utils/errors';
+import config from 'utils/config';
 import qs from 'qs';
 import defaultStyle from './style.scss';
 
@@ -27,6 +28,7 @@ class NewsletterSignup extends React.Component {
         body: formData,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `ApiKey ${config.SERVER_API_KEY}`,
         },
         method: 'POST',
       }).then(res => res.text())

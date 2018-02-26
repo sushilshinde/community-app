@@ -9,7 +9,7 @@ import moment from 'moment';
 import qs from 'qs';
 import { decodeToken } from 'tc-accounts';
 import { setErrorIcon, ERROR_ICON_TYPES } from 'utils/errors';
-import { COMPETITION_TRACKS } from 'utils/tc';
+import { COMPETITION_TRACKS, getApiResponsePayloadV3 } from 'utils/tc';
 import { getApiV2, getApiV3 } from './api';
 
 export const ORDER_BY = {
@@ -39,7 +39,9 @@ export function normalizeChallengeDetails(v3, v3Filtered, v3User, v2, username) 
   // Normalize exising data to make it consistent with the rest of the code
   const challenge = {
     id: v3.challengeId,
+    reliabilityBonus: v3Filtered.reliabilityBonus || 0,
     status: (v3.currentStatus || '').toUpperCase(),
+
     name: v3.challengeName,
     projectId: Number(v3.projectId),
     forumId: Number(v3.forumId),
@@ -80,7 +82,6 @@ export function normalizeChallengeDetails(v3, v3Filtered, v3User, v2, username) 
     documents: v3.documents || [],
     numRegistrants: v3.numberOfRegistrants,
     numberOfCheckpointSubmissions: v3.numberOfCheckpointSubmissions,
-    reliabilityBonus: v3.reliabilityBonus || 0,
   };
 
   // Fill missing data from v3_filtered
@@ -405,6 +406,9 @@ class ChallengesService {
     const challenge = normalizeChallengeDetails(
       challengeV3, challengeV3Filtered, challengeV3User, challengeV2, username);
 
+    challenge.fetchedWithAuth =
+      Boolean(this.private.api.private.token && this.private.apiV2.private.token);
+
     return challenge;
   }
 
@@ -465,6 +469,16 @@ class ChallengesService {
   }
 
   /**
+   * Gets SRM matches.
+   * @param {Object} params
+   * @return {Promise}
+   */
+  async getSrms(params) {
+    const res = await this.private.api.get(`/srms/?${qs.stringify(params)}`);
+    return getApiResponsePayloadV3(res);
+  }
+
+  /**
    * Gets challenges of the specified user.
    * @param {String} username User whose challenges we want to fetch.
    * @param {Object} filters Optional.
@@ -497,13 +511,25 @@ class ChallengesService {
   }
 
   /**
+   * Gets SRM matches related to the user.
+   * @param {String} handle
+   * @param {Object} params
+   * @return {Promise}
+   */
+  async getUserSrms(handle, params) {
+    const url = `/members/${handle}/srms/?${qs.stringify(params)}`;
+    const res = await this.private.api.get(url);
+    return getApiResponsePayloadV3(res);
+  }
+
+  /**
    * Registers user to the specified challenge.
    * @param {String} challengeId
    * @return {Promise}
    */
   async register(challengeId) {
     const endpoint = `/challenges/${challengeId}/register`;
-    const res = await this.private.apiV2.postJson(endpoint);
+    const res = await this.private.api.postJson(endpoint);
     if (!res.ok) throw new Error(res.statusText);
     return res.json();
   }
@@ -515,7 +541,7 @@ class ChallengesService {
    */
   async unregister(challengeId) {
     const endpoint = `/challenges/${challengeId}/unregister`;
-    const res = await this.private.apiV2.post(endpoint);
+    const res = await this.private.api.post(endpoint);
     if (!res.ok) throw new Error(res.statusText);
     return res.json();
   }
@@ -583,25 +609,6 @@ class ChallengesService {
     res = (await res.json()).result;
     if (res.status !== 200) throw new Error(res.content);
     return res.content;
-  }
-
-  /**
-   * Gets a list of currently open Review Opportunities.
-   * @param {Number} limit The max number to return in one call.
-   * @param {Number} offset Offset, used with limit to lazy load.
-   * @return {Promise} Resolves to the api response in JSON.
-   */
-  // This rule modification can be removed when mock api call is replaced
-  /* eslint-disable class-methods-use-this */
-  getReviewOpportunities(limit, offset) {
-    const endpoint = `/reviewOpportunities?limit=${limit}&offset=${offset}`;
-    return this.private.api.get(endpoint)
-      .then(res => (res.ok ? res.json() : new Error(res.statusText)))
-      .then(res => (
-        res.result.status === 200 ?
-          res.result.content :
-          new Error(res.result.content)
-      ));
   }
 }
 

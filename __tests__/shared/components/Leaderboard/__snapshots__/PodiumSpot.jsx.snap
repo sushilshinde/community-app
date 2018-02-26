@@ -10,11 +10,10 @@ exports[`Matches shallow shapshot 1`] = `
     <ThemedAvatar
       composeAdhocTheme="deeply"
       composeContextTheme="softly"
-      customStyles={null}
       mapThemrProps={[Function]}
       theme={
         Object {
-          "avatar": "src-shared-components-Leaderboard-___avatarStyles__gold___1KUGN",
+          "avatar": "src-shared-components-Leaderboard-avatarStyles___gold___1KUGNq",
         }
       }
       themePriority="adhoc-context-default"
@@ -59,11 +58,10 @@ exports[`Matches shallow shapshot 2`] = `
     <ThemedAvatar
       composeAdhocTheme="deeply"
       composeContextTheme="softly"
-      customStyles={null}
       mapThemrProps={[Function]}
       theme={
         Object {
-          "avatar": "src-shared-components-Leaderboard-___avatarStyles__gold___1KUGN",
+          "avatar": "src-shared-components-Leaderboard-avatarStyles___gold___1KUGNq",
         }
       }
       themePriority="adhoc-context-default"

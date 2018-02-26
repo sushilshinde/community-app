@@ -1,11 +1,12 @@
 @import "~styles/mixins";
 
 .container {
+  @include roboto-regular;
+
   padding-top: 66px;
   padding-bottom: 197px;
   max-width: 966px;
   margin: 0 auto;
-  font-family: 'Roboto';
 
   @include xs-to-sm {
     padding: 0 30px 30px;
@@ -133,6 +134,8 @@
 }
 
 .placement {
+  background-color: $tc-dark-blue-30;
+  color: $tc-dark-blue-100;
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -140,22 +143,21 @@
   line-height: 22px;
   text-align: center;
   margin-left: 6px;
-  background-color: $tc-gray-20;
 }
 
 .placement-1 {
   background-color: $tc-gold;
-  color: $tc-black;
+  color: $tc-gold-130;
 }
 
 .placement-2 {
   background-color: $tc-silver;
-  color: $tc-white;
+  color: $tc-silver-130;
 }
 
 .placement-3 {
   background-color: $tc-bronze;
-  color: $tc-white;
+  color: $tc-bronze-130;
 }
 
 .design {

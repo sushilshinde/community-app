@@ -16,7 +16,7 @@ input[type=checkbox] {
 // 
 $checkbox-size: $base-unit * 4;
 $checkbox-bg-empty: $tc-gray-neutral-light;
-$checkbox-bg-selected: $tc-dark-blue-90;
+$checkbox-bg-selected: $tc-dark-blue;
 
 .tc-checkbox-label {
   display: inline-block;
@@ -66,26 +66,12 @@ $checkbox-bg-selected: $tc-dark-blue-90;
       background: transparent;
       top: 4px;
       left: 3px;
-      border: 3px solid $tc-dark-blue-90;
+      border: 3px solid $tc-dark-blue;
       border-top: none;
       border-right: none;
       transform: rotate(-45deg);
       transition: all 0.15s ease-in-out;
     }
-
-    &:hover::after {
-      opacity: 0.3;
-    }
-  }
-
-  input[type=checkbox]:checked ~ label {
-    background: $checkbox-bg-selected;
-    border-color: $checkbox-bg-selected;
-  }
-
-  input[type=checkbox]:checked + label::after {
-    opacity: 1;
-    border-color: $tc-white;
   }
 }
 
@@ -100,7 +86,7 @@ $slider-width: $slider-height * 2 - ($slider-handle-offset * 2);
 $slider-handle-size: $slider-height - (2 * $slider-handle-offset);
 $slider-speed: 150ms;
 $slider-off-bg: $tc-gray-40;
-$slider-on-bg: $tc-dark-blue-90;
+$slider-on-bg: $tc-dark-blue;
 $slider-handle-color: $tc-white;
 
 .tc-slider-label {
@@ -121,19 +107,6 @@ $slider-handle-color: $tc-white;
   width: $slider-width;
   display: inline-block;
 
-  input[type=checkbox]:focus ~ label {
-    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4), 1px 1px 1px rgba(255, 255, 255, 0.6);
-    background: $slider-off-bg;
-  }
-
-  input[type=checkbox]:checked ~ label {
-    background: $slider-on-bg;
-
-    &::after {
-      left: ($slider-width - $slider-handle-size) - $slider-handle-offset * 2;
-    }
-  }
-
   label {
     border-radius: $slider-height / 2;
     box-shadow: inset 0 1px 2px 0 rgba(38, 38, 40, 0.3);
@@ -145,10 +118,6 @@ $slider-handle-color: $tc-white;
     transition: background $slider-speed ease-in-out;
     text-indent: -9999em;
     background: $slider-off-bg;
-
-    &:hover {
-      cursor: pointer;
-    }
 
     &::after {
       border-radius: $slider-height / 2;
@@ -174,6 +143,11 @@ $slider-handle-color: $tc-white;
 // ----------------------------------------------------------------------
 // 
 // TODO: Refactor to use parameters like the Slider
+
+.tc-checkbox label:hover::after {
+  opacity: 0.3;
+}
+
 .radio {
   margin: 0;
 
@@ -209,7 +183,7 @@ $slider-handle-color: $tc-white;
   }
 
   input[type="radio"]:checked + label::after {
-    background: $tc-dark-blue-90;
+    background: $tc-dark-blue;
     border-radius: 50%;
     content: "";
     display: inline-block;
@@ -219,4 +193,31 @@ $slider-handle-color: $tc-white;
     height: 11px;
     width: 11px;
   }
+}
+
+.tc-slider label:hover {
+  cursor: pointer;
+}
+
+.tc-slider input[type=checkbox]:focus ~ label {
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4), 1px 1px 1px rgba(255, 255, 255, 0.6);
+  background: $slider-off-bg;
+}
+
+.tc-slider input[type=checkbox]:checked ~ label {
+  background: $slider-on-bg;
+
+  &::after {
+    left: ($slider-width - $slider-handle-size) - $slider-handle-offset * 2;
+  }
+}
+
+.tc-checkbox input[type=checkbox]:checked ~ label {
+  background: $checkbox-bg-selected;
+  border-color: $checkbox-bg-selected;
+}
+
+.tc-checkbox input[type=checkbox]:checked + label::after {
+  opacity: 1;
+  border-color: $tc-white;
 }

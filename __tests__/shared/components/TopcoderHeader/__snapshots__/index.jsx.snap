@@ -627,15 +627,9 @@ exports[`Render with specified profile 1`] = `
           <ThemedAvatar
             composeAdhocTheme="deeply"
             composeContextTheme="softly"
-            customStyles={null}
             mapThemrProps={[Function]}
-            theme={
-              Object {
-                "avatar": "",
-              }
-            }
             themePriority="adhoc-context-default"
-            url={null}
+            url={undefined}
           />
         </div>
       </div>

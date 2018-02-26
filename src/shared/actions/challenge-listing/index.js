@@ -6,8 +6,10 @@ import _ from 'lodash';
 import { createActions } from 'redux-actions';
 import { decodeToken } from 'tc-accounts';
 import { getService } from 'services/challenges';
+import { getReviewOpportunitiesService } from 'services/reviewOpportunities';
 import 'isomorphic-fetch';
 import { fireErrorMessage } from 'utils/errors';
+import { processSRM } from 'utils/tc';
 
 /**
  * The maximum number of challenges to fetch in a single API call. Currently,
@@ -218,12 +220,53 @@ function getPastChallengesDone(uuid, page, filter, tokenV3, frontFilter = {}) {
  * @param {String} tokenV3 Optional. Topcoder auth token v3.
  * @return {Object} Action object
  */
-function getReviewOpportunitiesDone(uuid, page /* , tokenV3 */) {
-  // TODO: Pass tokenV3 to fetch review opportunities for private challenges
-  return getService()
+function getReviewOpportunitiesDone(uuid, page, tokenV3) {
+  return getReviewOpportunitiesService(tokenV3)
     .getReviewOpportunities(REVIEW_OPPORTUNITY_PAGE_SIZE, page * REVIEW_OPPORTUNITY_PAGE_SIZE)
     .then(loaded => ({ uuid, loaded }))
-    .catch(error => fireErrorMessage('Error Getting Review Opportunities', error));
+    .catch((error) => {
+      fireErrorMessage('Error Getting Review Opportunities', error.content || error);
+      return Promise.reject(error);
+    });
+}
+
+/**
+ * Payload creator for the action that inits the loading of SRMs.
+ * @param {String} uuid
+ * @return {String}
+ */
+function getSrmsInit(uuid) {
+  return uuid;
+}
+
+/**
+ * Payload creator for the action that loads SRMs.
+ * @param {String} uuid
+ * @param {String} handle
+ * @param {Object} params
+ * @param {String} tokenV3
+ */
+function getSrmsDone(uuid, handle, params, tokenV3) {
+  const service = getService(tokenV3);
+  const promises = [service.getSrms(params)];
+  if (handle) {
+    promises.push(service.getUserSrms(handle, params));
+  }
+  return Promise.all(promises).then((data) => {
+    let srms = data[0];
+    const userSrms = data[1];
+    const userSrmsMap = {};
+    _.forEach(userSrms, (srm) => {
+      userSrmsMap[srm.id] = srm;
+    });
+    srms = _.map(srms, (srm) => {
+      if (userSrmsMap[srm.id]) {
+        return processSRM(srm);
+      }
+      return srm;
+    });
+    return { uuid, data: srms };
+  });
 }
 
 export default createActions({
@@ -247,6 +290,9 @@ export default createActions({
 
     GET_REVIEW_OPPORTUNITIES_INIT: (uuid, page) => ({ uuid, page }),
     GET_REVIEW_OPPORTUNITIES_DONE: getReviewOpportunitiesDone,
+
+    GET_SRMS_INIT: getSrmsInit,
+    GET_SRMS_DONE: getSrmsDone,
 
     EXPAND_TAG: id => id,
 

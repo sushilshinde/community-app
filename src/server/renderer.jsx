@@ -24,7 +24,7 @@ import App from '../shared';
  * to put the store into correct state depending on the demanded route. */
 import storeFactory from '../shared/store-factory';
 
-const configKeyUrl = path.resolve(__dirname, '../../.injkey');
+const buildInfoUrl = path.resolve(__dirname, '../../.build-info');
 
 const sanitizedConfig =
   _.omit(config, [
@@ -40,8 +40,9 @@ const sanitizedConfig =
  */
 function prepareCipher() {
   return new Promise(resolve =>
-    fs.readFile(configKeyUrl, (err1, key) =>
+    fs.readFile(buildInfoUrl, (err1, buildInfo) =>
       forge.random.getBytes(32, (err2, iv) => {
+        const key = JSON.parse(buildInfo).rndkey;
         const cipher = forge.cipher.createCipher('AES-CBC', key.toString());
         cipher.start({ iv });
         resolve({ cipher, iv });
@@ -123,6 +124,11 @@ export default (req, res) => {
             window.EXCHANGE_RATES = ${sanitizedExchangeRates}
             window.SPLITS = ${serializeJs(context.splits, { isJSON: true })}
             window.INJ="${INJ}"
+          </script>
+          <script>
+            !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+            analytics.load("${config.SEGMENT_IO_API_KEY}");
+            }}();
           </script>
           <script src="/community-app-assets/main.js" type="application/javascript"></script>
           <script>

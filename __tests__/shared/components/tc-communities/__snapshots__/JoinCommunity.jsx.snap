@@ -4,7 +4,7 @@ exports[`Matches shallow shapshot 1`] = `
 <div
   className={undefined}
 >
-  <ThemedGenericButton
+  <ThemedButton
     active={false}
     className=""
     composeAdhocTheme="deeply"
@@ -21,7 +21,7 @@ exports[`Matches shallow shapshot 1`] = `
     to={null}
   >
     Join Community
-  </ThemedGenericButton>
+  </ThemedButton>
   <ConfirmModal
     communityId={undefined}
     communityName="ios"
@@ -42,9 +42,9 @@ exports[`Matches shallow shapshot 2`] = `
 <div
   className={undefined}
 >
-  <ThemedGenericButton
+  <ThemedButton
     active={false}
-    className="src-shared-components-tc-communities-JoinCommunity-___style__joining___rq-m2"
+    className="src-shared-components-tc-communities-JoinCommunity-style___joining___rq-m2x"
     composeAdhocTheme="deeply"
     composeContextTheme="softly"
     disabled={false}
@@ -59,7 +59,7 @@ exports[`Matches shallow shapshot 2`] = `
     to={null}
   >
     <div
-      className="src-shared-components-tc-communities-JoinCommunity-___style__joiningContainer___2P4Cv"
+      className="src-shared-components-tc-communities-JoinCommunity-style___joiningContainer___2P4Cvw"
     >
       <span>
         Joining...
@@ -70,13 +70,13 @@ exports[`Matches shallow shapshot 2`] = `
         mapThemrProps={[Function]}
         theme={
           Object {
-            "container": "src-shared-components-tc-communities-JoinCommunity-___style__loadingIndicator___2RP1u",
+            "container": "src-shared-components-tc-communities-JoinCommunity-style___loadingIndicator___2RP1uY",
           }
         }
         themePriority="adhoc-context-default"
       />
     </div>
-  </ThemedGenericButton>
+  </ThemedButton>
 </div>
 `;
 
@@ -90,7 +90,7 @@ exports[`Matches shallow shapshot 4`] = `
 <div
   className={undefined}
 >
-  <ThemedGenericButton
+  <ThemedButton
     active={false}
     className=""
     composeAdhocTheme="deeply"
@@ -107,7 +107,7 @@ exports[`Matches shallow shapshot 4`] = `
     to={null}
   >
     Join Community
-  </ThemedGenericButton>
+  </ThemedButton>
   <ThemedModal
     composeAdhocTheme="deeply"
     composeContextTheme="softly"
@@ -128,7 +128,7 @@ exports[`Matches shallow shapshot 4`] = `
       ios
       !
     </p>
-    <ThemedGenericButton
+    <ThemedButton
       active={false}
       composeAdhocTheme="deeply"
       composeContextTheme="softly"
@@ -142,14 +142,14 @@ exports[`Matches shallow shapshot 4`] = `
       size={null}
       theme={
         Object {
-          "button": "src-shared-components-tc-communities-JoinCommunity-___style__returnToCommunityButton___1YlEi",
+          "button": "src-shared-components-tc-communities-JoinCommunity-style___returnToCommunityButton___1YlEiP",
         }
       }
       themePriority="adhoc-context-default"
       to={null}
     >
       Return to the Community
-    </ThemedGenericButton>
+    </ThemedButton>
   </ThemedModal>
 </div>
 `;
@@ -158,7 +158,7 @@ exports[`Matches shallow shapshot 5`] = `
 <div
   className={undefined}
 >
-  <ThemedGenericButton
+  <ThemedButton
     active={false}
     className=""
     composeAdhocTheme="deeply"
@@ -175,7 +175,7 @@ exports[`Matches shallow shapshot 5`] = `
     to={null}
   >
     Join Community
-  </ThemedGenericButton>
+  </ThemedButton>
   <ConfirmModal
     communityId={undefined}
     communityName="ios"

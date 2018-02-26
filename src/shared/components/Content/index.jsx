@@ -162,12 +162,23 @@ export default function Content() {
       <h3>Misc Examples</h3>
       <ul>
         <li>
-          <Link to="/examples/buttons/">Buttons</Link> - Demo/test of standard
-          buttons already available in the code, and customizable with help
-          of <code>react-css-themr</code>.
+          <Link
+            to="/examples/announcement/5yaVZtOH9CYoQ0QYQk0uoY"
+          >Announcement</Link> &mdash;
+          This is a part of simple PoC for CMS integration (Countentful CMS is
+          the currently tested option);
+        </li>
+        <li>
+          <Link to="/examples/buttons/">Buttons</Link> &mdash; Demo/test of
+          standard buttons already available in the code, and customizable with
+          help of <code>react-css-themr</code>.
         </li>
         <li>
           <Link to="/examples/code-splitting">Code Splitting</Link>
+        </li>
+        <li>
+          <Link to="/examples/color-mixins">Color Mixins</Link> &mdash; Live
+          demo of TC UI Kit color pallete;
         </li>
         <li>
           <Link to="/examples/css-modules">CSS Modules</Link> - Demo/test of CSS modules in action;

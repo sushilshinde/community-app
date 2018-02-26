@@ -6,7 +6,7 @@
   align-items: flex-start;
   display: flex;
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 100px 0;
 
   @include xs-to-sm {
@@ -30,7 +30,7 @@
 }
 
 .link {
-  color: $tc-dark-blue-90;
+  color: $tc-dark-blue;
 
   &:visited {
     color: royalblue;
@@ -42,7 +42,7 @@
 
   background: none !important;
   border: none !important;
-  color: $tc-dark-blue-90;
+  color: $tc-dark-blue;
   margin: 0 !important;
   outline: none !important;
   padding: 0 !important;
@@ -129,7 +129,7 @@
   display: flex;
   margin: auto;
   padding-bottom: 60px;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
 
   @include xs-to-sm {
     flex-direction: column;

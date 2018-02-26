@@ -25,6 +25,12 @@
    * challenges once per this amount of seconds. */
   "CHALLENGE_LISTING_AUTO_REFRESH": 300,
 
+  "CONTENTFUL_CMS": {
+    "CDN_API_KEY": "b25086ddbd7b3e7aeb4fff61ec0a324bbb01366813b3c9ad0d5ac7a75647409d",
+    "PREVIEW_API_KEY": "ed55979c2d5d18e83e11987f2d163f70e0e6da077ca21ffbd2821c565dfd2842",
+    "SPACE": "b5f1djy59z3a"
+  },
+
   /* API token for logentries.com. The token below is just for local testing of
    * the setup. To override it use LOG_ENTRIES_TOKEN environment variable. */
   "LOG_ENTRIES_TOKEN": "816f5574-0d4a-49f9-ab3b-00d791f7c1f7",
@@ -69,6 +75,8 @@
    * variables. */
   "SEGMENT_IO_API_KEY": "",
 
+  "SERVER_API_KEY": "",
+
   "SWIFT_PROGRAM_ID": 3445,
 
   /* Various URLs. Most of them lead to different segments of Topcoder
@@ -80,7 +88,8 @@
     "ARENA": "https://arena.topcoder-dev.com",
     "AUTH": "http://accounts.topcoder-dev.com",
     "BASE": "https://www.topcoder-dev.com",
-    "BLOG": "https://www.topcoder-dev.com/feed",
+    "BLOG": "https://www.topcoder-dev.com/blog",
+    "BLOG_FEED": "https://www.topcoder-dev.com/feed",
     "COMMUNITY": "https://community.topcoder-dev.com",
     "FORUMS": "https://apps.topcoder-dev.com/forums",
     "HELP": "https://help.topcoder-dev.com",

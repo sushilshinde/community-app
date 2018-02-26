@@ -1,5 +1,15 @@
 @import '~styles/mixins';
 
+.handle {
+  background: $tc-white;
+  border-radius: 11px;
+  height: 11px;
+  margin: 2px;
+  position: absolute;
+  top: 0;
+  width: 11px;
+}
+
 .disabled {
   background: $tc-gray-30;
 
@@ -9,21 +19,11 @@
 }
 
 .enabled {
-  background: $tc-dark-blue-90;
+  background: $tc-dark-blue;
 
   .handle {
     right: 0;
   }
-}
-
-.handle {
-  background: $tc-white;
-  border-radius: 11px;
-  height: 11px;
-  margin: 2px;
-  position: absolute;
-  top: 0;
-  width: 11px;
 }
 
 .switch {

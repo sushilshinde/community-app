@@ -17,7 +17,9 @@
 import { getCommunityId } from 'server/services//communities';
 import { combine, resolveReducers } from 'utils/redux';
 
+import cms from './cms';
 import direct from './direct';
+import members from './members';
 import memberTasks from './member-tasks';
 import topcoderHeader from './topcoder_header';
 import rss from './rss';
@@ -28,10 +30,10 @@ import { factory as errorsFactory } from './errors';
 import { factory as examplesFactory } from './examples';
 import { factory as groupsFactory } from './groups';
 import { factory as pageFactory } from './page';
+import { factory as reviewOpportunityFactory } from './reviewOpportunity';
 import { factory as statsFactory } from './stats';
 import { factory as tcCommunitiesFactory } from './tc-communities';
 import { factory as leaderboardFactory } from './leaderboard';
-import { factory as dashboardFactory } from './dashboard';
 import { factory as termsFactory } from './terms';
 import { factory as scoreboardFactory } from './tco/scoreboard';
 
@@ -45,8 +47,8 @@ export function factory(req) {
     stats: statsFactory(req),
     tcCommunities: tcCommunitiesFactory(req),
     leaderboard: leaderboardFactory(req),
-    dashboard: dashboardFactory(req),
     terms: termsFactory(req),
+    reviewOpportunity: reviewOpportunityFactory(req),
     scoreboard: scoreboardFactory(req),
     page: pageFactory(req),
     errors: errorsFactory(req),
@@ -59,7 +61,9 @@ export function factory(req) {
     return res;
   }, {
     ...reducers,
+    cms,
     direct,
+    members,
     memberTasks,
     topcoderHeader,
     rss,

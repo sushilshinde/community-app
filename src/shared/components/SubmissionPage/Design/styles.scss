@@ -1,12 +1,13 @@
 @import "~styles/mixins";
 
 .design-content {
+  @include roboto-regular;
+
   display: flex;
   flex-direction: column;
   background-color: white;
   width: 100%;
   padding: 5px 60px;
-  font-family: 'Roboto';
 
   @include sm-to-md {
     padding: 0;
@@ -285,7 +286,7 @@
           background: transparent;
           top: 3px;
           left: 2px;
-          border: 3px solid $tc-dark-blue-90;
+          border: 3px solid $tc-dark-blue;
           border-top: none;
           border-right: none;
           transform: rotate(-45deg);
@@ -298,8 +299,8 @@
       }
 
       input[type=checkbox]:checked ~ label {
-        background: $tc-dark-blue-90;
-        border-color: $tc-dark-blue-90;
+        background: $tc-dark-blue;
+        border-color: $tc-dark-blue;
       }
 
       input[type=checkbox]:checked + label::after {

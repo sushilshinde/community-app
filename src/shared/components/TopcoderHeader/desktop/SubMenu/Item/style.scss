@@ -12,21 +12,6 @@
   text-transform: uppercase;
   vertical-align: top;
 
-  &.current {
-    background: fade-out($tc-dark-blue-90, 0.66);
-
-    a {
-      color: $tc-white;
-    }
-  }
-
-  svg {
-    display: block;
-    height: 36px;
-    margin: 0 auto 10px;
-    width: 36px;
-  }
-
   a {
     color: $tc-white;
     cursor: pointer;
@@ -41,8 +26,23 @@
     }
   }
 
+  &.current {
+    background: fade-out($tc-dark-blue, 0.66);
+
+    a {
+      color: $tc-white;
+    }
+  }
+
+  svg {
+    display: block;
+    height: 36px;
+    margin: 0 auto 10px;
+    width: 36px;
+  }
+
   &:hover {
-    background: $tc-dark-blue-90;
+    background: $tc-dark-blue;
 
     a {
       color: $tc-white;

@@ -34,6 +34,13 @@
   }
 }
 
+.cardImage {
+  background-position: 50% 50%;
+  background-size: cover;
+  height: 200px;
+  width: 100%;
+}
+
 .card-01 .cardImage {
   background-image: url('./images/card-image-01.jpg');
 }
@@ -46,17 +53,10 @@
   padding: 30px;
 }
 
-.cardImage {
-  background-position: 50% 50%;
-  background-size: cover;
-  height: 200px;
-  width: 100%;
-}
-
 .cardsBlock {
   display: flex;
   margin: 40px auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 0 15px;
 
   @include xs-to-sm {
@@ -72,7 +72,7 @@
 
 .joinBlock {
   margin: 100px auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 0 40px;
   text-align: center;
 

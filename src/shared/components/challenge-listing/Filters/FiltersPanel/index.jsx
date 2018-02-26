@@ -27,9 +27,9 @@ import React from 'react';
 import PT from 'prop-types';
 import Select from 'components/Select';
 import moment from 'moment';
-import { Button, PrimaryButton } from 'components/buttons';
+import { Button, PrimaryButton } from 'topcoder-react-ui-kit';
 import Tooltip from 'components/Tooltip';
-import { Link } from 'utils/router';
+import { Link } from 'topcoder-react-utils';
 import { COMPOSE, PRIORITY } from 'react-css-super-themr';
 import { REVIEW_OPPORTUNITY_TYPES } from 'utils/tc';
 import CheckmarkIcon from './CheckmarkIcon';
@@ -234,11 +234,11 @@ export default function FiltersPanel({
             </div> : null
           }
           <div styleName="filter dates hidetwomonthdatepicker">
-            <label htmlFor="date-range-picker">Date range</label>
+            <label htmlFor="date-range-picker-one-month">Date range</label>
             <DateRangePicker
               numberOfMonths={1}
               endDate={filterState.endDate && moment(filterState.endDate)}
-              id="date-range-picker"
+              id="date-range-picker-one-month"
               onDatesChange={(dates) => {
                 let d = dates.endDate ? dates.endDate.toISOString() : null;
                 let state = Filter.setEndDate(filterState, d);
@@ -252,11 +252,11 @@ export default function FiltersPanel({
             />
           </div>
           <div styleName="filter dates hideonemonthdatepicker">
-            <label htmlFor="date-range-picker">Date range</label>
+            <label htmlFor="date-range-picker-two-months">Date range</label>
             <DateRangePicker
               numberOfMonths={2}
               endDate={filterState.endDate && moment(filterState.endDate)}
-              id="date-range-picker"
+              id="date-range-picker-two-months"
               onDatesChange={(dates) => {
                 let d = dates.endDate ? dates.endDate.toISOString() : null;
                 let state = Filter.setEndDate(filterState, d);

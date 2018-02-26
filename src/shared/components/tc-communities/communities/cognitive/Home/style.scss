@@ -39,7 +39,7 @@
 
 .head-banner-text-content {
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
 }
 
 .head-banner-title {
@@ -69,8 +69,8 @@
 
 .mission {
   display: flex;
-  margin: 100px auto;
-  max-width: $tc-screen-lg;
+  margin: 60px auto;
+  max-width: $screen-lg;
 
   @include xs-to-sm {
     flex-direction: column;
@@ -107,7 +107,7 @@
   align-items: flex-start;
   display: flex;
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 100px 0;
 
   @include xs-to-md {
@@ -183,7 +183,7 @@
 
 .joining-is-simple-content {
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
 }
 
 .joining-is-simple-title {
@@ -281,7 +281,7 @@
 
 .learn-content {
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
 }
 
 .learn-title {
@@ -319,6 +319,13 @@
   }
 }
 
+.cardImage {
+  background-position: 50% 50%;
+  background-size: cover;
+  height: 300px;
+  width: 100%;
+}
+
 .card-01 .cardImage {
   background-image: url('assets/images/communities/cognitive/home/card-01.jpg');
 }
@@ -327,21 +334,18 @@
   background-image: url('assets/images/communities/cognitive/home/card-02.jpg');
 }
 
-.cardContent {
-  padding: 30px;
+.card-03 .cardImage {
+  background-image: url('assets/images/communities/cognitive/home/card-03.jpg');
 }
 
-.cardImage {
-  background-position: 50% 50%;
-  background-size: cover;
-  height: 300px;
-  width: 100%;
+.cardContent {
+  padding: 30px;
 }
 
 .cardsBlock {
   display: flex;
   margin: 40px auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 0;
 
   @include xs-to-sm {
@@ -349,11 +353,18 @@
   }
 }
 
+.cardRegularText {
+  @include tc-body-md;
+
+  line-height: 2.4;
+}
+
 .readMoreButton {
   margin: 20px 0 0 !important;
 }
 
-.card-link {
+.card-link,
+.card-link:hover {
   @include tc-body-md;
 
   color: #1a85ff;

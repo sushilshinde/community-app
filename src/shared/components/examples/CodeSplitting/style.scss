@@ -10,7 +10,7 @@
 
   font-weight: 300;
   margin: auto;
-  max-width: $tc-screen-lg;
+  max-width: $screen-lg;
   padding: 24px;
 
   em {
@@ -36,8 +36,8 @@
 }
 
 .quote {
-  background: $tc-gold-10;
-  border: 1px solid $tc-gold;
+  background: $tc-yellow-10;
+  border: 1px solid $tc-yellow;
   margin: 6px 0;
   padding: 12px 24px;
 

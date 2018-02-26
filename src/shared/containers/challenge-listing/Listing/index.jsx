@@ -41,12 +41,19 @@ const SEO_PAGE_TITLE = 'Topcoder Challenges';
 export class ListingContainer extends React.Component {
   componentDidMount() {
     const {
+      activeBucket,
       auth,
       communitiesList,
       getCommunitiesList,
+      selectBucket,
+      queryBucket,
     } = this.props;
 
     this.props.markHeaderMenu();
+
+    if (queryBucket !== activeBucket && _.includes(BUCKETS, queryBucket)) {
+      selectBucket(queryBucket);
+    }
 
     if (!communitiesList.loadingUuid
     && (Date.now() - communitiesList.timestamp > 10 * MIN)) {
@@ -135,6 +142,7 @@ export class ListingContainer extends React.Component {
       challengeSubtracks,
       challengeTags,
       defaultCommunityId,
+      extraBucket,
       filter,
       groupIds,
       getDraftChallenges,
@@ -148,6 +156,7 @@ export class ListingContainer extends React.Component {
       lastUpdateOfActiveChallenges,
       listingOnly,
       newChallengeDetails,
+      preListingMsg,
       reviewOpportunities,
       selectBucket,
       selectChallengeDetailsTab,
@@ -224,6 +233,7 @@ export class ListingContainer extends React.Component {
           defaultCommunityId={defaultCommunityId}
           expandedTags={this.props.expandedTags}
           expandTag={this.props.expandTag}
+          extraBucket={extraBucket}
           filterState={filter}
           hideSrm={hideSrm}
           hideTcLinksInFooter={hideTcLinksInSidebarFooter}
@@ -235,6 +245,7 @@ export class ListingContainer extends React.Component {
           loadingReviewOpportunities={Boolean(this.props.loadingReviewOpportunitiesUUID)}
           newChallengeDetails={newChallengeDetails}
           openChallengesInNewTabs={this.props.openChallengesInNewTabs}
+          preListingMsg={preListingMsg}
           prizeMode={this.props.prizeMode}
           selectBucket={selectBucket}
           selectChallengeDetailsTab={selectChallengeDetailsTab}
@@ -271,6 +282,7 @@ export class ListingContainer extends React.Component {
 
 ListingContainer.defaultProps = {
   defaultCommunityId: '',
+  extraBucket: null,
   hideSrm: false,
   selectedCommunityId: '',
   groupIds: [''],
@@ -281,7 +293,9 @@ ListingContainer.defaultProps = {
   listingOnly: false,
   newChallengeDetails: false,
   openChallengesInNewTabs: false,
+  preListingMsg: null,
   prizeMode: 'money-usd',
+  queryBucket: BUCKETS.ALL,
 };
 
 ListingContainer.propTypes = {
@@ -313,6 +327,7 @@ ListingContainer.propTypes = {
   communityId: PT.string,
   communityName: PT.string,
   communityFilters: PT.arrayOf(PT.object).isRequired,
+  extraBucket: PT.string,
   getAllActiveChallenges: PT.func.isRequired,
   getCommunitiesList: PT.func.isRequired,
   getDraftChallenges: PT.func.isRequired,
@@ -330,6 +345,7 @@ ListingContainer.propTypes = {
   markHeaderMenu: PT.func.isRequired,
   newChallengeDetails: PT.bool,
   openChallengesInNewTabs: PT.bool,
+  preListingMsg: PT.node,
   prizeMode: PT.string,
   reviewOpportunities: PT.arrayOf(PT.shape()).isRequired,
   selectBucket: PT.func.isRequired,
@@ -345,6 +361,7 @@ ListingContainer.propTypes = {
   groupIds: PT.arrayOf(PT.string),
   expandedTags: PT.arrayOf(PT.number).isRequired,
   expandTag: PT.func.isRequired,
+  queryBucket: PT.string,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -362,6 +379,7 @@ const mapStateToProps = (state, ownProps) => {
     communitiesList: tc.list,
     communityFilters: tc.list.data,
     domain: state.domain,
+    extraBucket: ownProps.extraBucket,
     hideTcLinksInSidebarFooter: ownProps.hideTcLinksInSidebarFooter,
     keepPastPlaceholders: cl.keepPastPlaceholders,
     lastRequestedPageOfDraftChallenges: cl.lastRequestedPageOfDraftChallenges,
@@ -376,6 +394,7 @@ const mapStateToProps = (state, ownProps) => {
     loadingChallengeTags: cl.loadingChallengeTags,
     newChallengeDetails: ownProps.newChallengeDetails,
     openChallengesInNewTabs: ownProps.openChallengesInNewTabs,
+    preListingMsg: ownProps.preListingMsg,
     prizeMode: ownProps.prizeMode,
     reviewOpportunities: cl.reviewOpportunities,
     selectedCommunityId: cl.selectedCommunityId,

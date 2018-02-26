@@ -2,6 +2,7 @@ import _ from 'lodash';
 import challengeListingActions from 'actions/challenge-listing';
 import communityActions from 'actions/tc-communities';
 import Home from 'components/tc-communities/communities/cognitive/Home';
+import moment from 'moment';
 import PT from 'prop-types';
 import React from 'react';
 import resourcesActions from 'actions/page/communities/cognitive/resources';
@@ -48,7 +49,11 @@ class HomeContainer extends React.Component {
     let filter = communitiesList.data.find(x => x.communityId === 'cognitive');
     if (filter) {
       filter = getFilterFunction(filter.challengeFilter);
-      challenges = activeChallenges.filter(filter);
+      challenges = activeChallenges
+        .filter(x => x.status === 'ACTIVE')
+        .filter(filter)
+        .sort((a, b) =>
+          moment(a.registrationStartDate).diff(b.registrationStartDate));
     }
 
     return (
@@ -65,7 +70,10 @@ class HomeContainer extends React.Component {
 }
 
 HomeContainer.propTypes = {
-  activeChallenges: PT.arrayOf(PT.object).isRequired,
+  activeChallenges: PT.arrayOf(PT.shape({
+    registrationStartDate: PT.string.isRequired,
+    status: PT.string.isRequired,
+  })).isRequired,
   activeChallengesTimestamp: PT.number.isRequired,
   auth: PT.shape({
     tokenV3: PT.string,

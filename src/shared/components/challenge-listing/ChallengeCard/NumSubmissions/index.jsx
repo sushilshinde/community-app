@@ -10,7 +10,7 @@ import PT from 'prop-types';
 import React from 'react';
 import Tooltip from 'components/Tooltip';
 import { DETAIL_TABS } from 'actions/challenge';
-import { Link } from 'utils/router';
+import { Link } from 'topcoder-react-utils';
 
 /* TODO: The icon should be converted back to SVG and imported using the
  * the standard approach for our code! */
@@ -51,10 +51,10 @@ export default function NumSubmissions({
         <Link
           onClick={() => (
             selectChallengeDetailsTab(
-              numSubmissions && status === 'COMPLETED'
-                ? DETAIL_TABS.SUBMISSIONS : DETAIL_TABS.DETAILS,
+              numSubmissions ? DETAIL_TABS.SUBMISSIONS : DETAIL_TABS.DETAILS,
             )
           )}
+          styleName="link"
           to={link}
         >
           <SubmissionsIcon />

@@ -20,16 +20,14 @@ export function isClientSide() {
  * Retruns true if development version of the code is running.
  */
 export function isDev() {
-  /* TODO: See the comments to HMR-related code in server/server.js for the
-   * reason behind process.env.NODE_ENV_REAL. */
-  return process.env.NODE_ENV === 'development';
+  return process.env.BABEL_ENV === 'development';
 }
 
 /**
  * Returns true if production version of the code is running.
  */
 export function isProd() {
-  return process.env.NODE_ENV === 'production';
+  return process.env.BABEL_ENV === 'production';
 }
 
 /**
@@ -58,8 +56,9 @@ export function buildTimestamp() {
   if (!BUILD_TIMESTAMP) {
     if (isServerSide()) {
       try {
-        BUILD_TIMESTAMP = path.resolve(__dirname, '../../../.build-timestamp');
-        BUILD_TIMESTAMP = fs.readFileSync(BUILD_TIMESTAMP).toString();
+        BUILD_TIMESTAMP = path.resolve(__dirname, '../../../.build-info');
+        BUILD_TIMESTAMP = fs.readFileSync(BUILD_TIMESTAMP);
+        BUILD_TIMESTAMP = JSON.parse(BUILD_TIMESTAMP).timestamp;
       } catch (e) {
         BUILD_TIMESTAMP = 'N/A';
       }
