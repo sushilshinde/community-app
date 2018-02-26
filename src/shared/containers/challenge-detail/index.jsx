@@ -191,7 +191,7 @@ class ChallengeDetailPageContainer extends React.Component {
     if (!this.props.auth.tokenV2) {
       const utmSource = this.props.communityId || 'community-app-main';
       location.href = `${config.URL.AUTH}/member?retUrl=${encodeURIComponent(location.href)}&utm_source=${utmSource}`;
-    } else if (_.every(this.props.terms, 'agreed')) {
+    } else if (_.every(this.getSubmitterTerms(), 'agreed')) {
       this.props.registerForChallenge(this.props.auth, this.props.challengeId);
     } else {
       this.props.openTermsModal(this.getSubmitterTerms());
@@ -384,6 +384,7 @@ ChallengeDetailPageContainer.propTypes = {
   setChallengeListingFilter: PT.func.isRequired,
   setSpecsTabState: PT.func.isRequired,
   specsTabState: PT.string.isRequired,
+  terms: PT.arrayOf(PT.object).isRequired,
   toggleCheckpointFeedback: PT.func.isRequired,
   unregisterFromChallenge: PT.func.isRequired,
   unregistering: PT.bool.isRequired,
