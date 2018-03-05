@@ -2,9 +2,13 @@
  * Actions related to the dashboard announcements.
  */
 
-import moment from 'moment';
+// import moment from 'moment';
 import { createActions } from 'redux-actions';
-import { cdnService, previewService } from 'services/contentful-cms';
+import {
+  cdnService,
+  getCurrentDashboardAnnouncementId,
+  previewService,
+} from 'services/contentful';
 
 /**
  * Payload creator for the action that inits the loading of the active dashboard
@@ -22,6 +26,25 @@ function getActiveInit(uuid) {
  * @return {Promise}
  */
 async function getActiveDone(uuid) {
+  let res = await getCurrentDashboardAnnouncementId();
+  if (!res) return { assets: {}, data: null, uuid };
+
+  res = await cdnService.getContentEntry(res);
+
+  const assets = {};
+  let img = res.fields.backgroundImage;
+  if (img) {
+    img = await cdnService.getAsset(img.sys.id);
+    assets[img.sys.id] = img;
+  }
+
+  return {
+    assets,
+    data: res,
+    uuid,
+  };
+
+  /*
   const now = moment().toISOString();
   const res = await cdnService.getContentEntries({
     content_type: 'dashboardAnnouncement',
@@ -35,6 +58,7 @@ async function getActiveDone(uuid) {
     data: res.items[0],
     uuid,
   };
+  */
 }
 
 /**

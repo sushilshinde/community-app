@@ -5,11 +5,15 @@
   background-size: cover;
   border-bottom: 1px solid $tc-gray-neutral-dark;
   display: flex;
-  height: 480px;
+  min-height: 480px;
   max-width: $screen-lg;
   padding: 30px;
   position: relative;
   width: 100%;
+
+  @include xs-to-sm {
+    flex-direction: column;
+  }
 }
 
 .details {
@@ -40,12 +44,26 @@
   padding: 30px;
 }
 
+.previewLabel {
+  color: $tc-purple;
+  font-size: 300px;
+  font-weight: bold;
+  left: 0;
+  line-height: 100%;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  vertical-align: bottom;
+  z-index: 1000;
+}
+
 .readMore {
   margin: 20px 0 0 !important;
 }
 
 .text {
-  @include tc-body-md;
+  @include tc-body-lg;
 }
 
 .title {
@@ -67,6 +85,11 @@
 .video {
   flex: 1;
   margin: 35px 30px 35px 0;
+
+  @include xs-to-sm {
+    align-self: stretch;
+    margin-bottom: 0;
+  }
 }
 
 .hidden {
@@ -79,20 +102,21 @@
   width: 100%;
 
   .text {
-    @include tc-heading-lg;
+    @include tc-heading-md;
 
     color: $tc-white;
+    font-weight: 100;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .title {
-    @include tc-heading-lg;
+    @include tc-heading-md;
 
     color: $tc-white;
-    font-weight: 900;
-    margin: 0 30px 0 0;
+    font-weight: 400;
+    margin: 0 15px 0 0;
     white-space: nowrap;
   }
 
@@ -105,8 +129,8 @@
   @include tc-body-md;
 
   background: $tc-purple-10;
-  border: 1px solid $tc-purple;
-  color: $tc-purple;
+  border: 1px solid $tc-purple-110;
+  color: $tc-purple-110;
   padding: 30px;
 }
 
