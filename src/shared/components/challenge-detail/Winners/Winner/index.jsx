@@ -22,8 +22,11 @@ export default function Winner({
   const submissionId = viewable && getId(submissions, winner.placement);
   const placeStyle = winner.placement < 4 ? `place-${winner.placement}` : '';
 
-  let avatarUrl = winner.photoURL || '';
-  if (avatarUrl.startsWith('/')) avatarUrl = `${config.URL.BASE}${avatarUrl}`;
+  let avatarUrl = winner.photoURL;
+  if (avatarUrl) {
+    avatarUrl = `${config.CDN.PUBLIC}/avatar/${
+      encodeURIComponent(avatarUrl)}?size=65`;
+  }
 
   const prize = winner.placement <= prizes.length
     ? `${prizes[winner.placement - 1].toLocaleString()}` : 'N/A';

@@ -33,8 +33,9 @@ function Tip(props) {
   )); */
   const { photoLink } = props.user;
   let src = photoLink;
-  if (src && !src.startsWith('http')) {
-    src = `${config.URL.BASE}/${src}`;
+  if (src) {
+    src = `${config.CDN.PUBLIC}/avatar/${
+      encodeURIComponent(src)}?size=50`;
   }
 
   return (
