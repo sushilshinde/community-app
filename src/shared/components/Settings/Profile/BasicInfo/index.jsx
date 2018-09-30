@@ -11,20 +11,17 @@ import PT from 'prop-types';
 import moment from 'moment';
 
 import { PrimaryButton } from 'topcoder-react-ui-kit';
-import { getAllCountryObjects } from 'utils/countries';
-import UserConsentModal from 'components/Settings/UserConsentModal';
+import ConsentComponent from 'components/Settings/ConsentComponent';
 import Select from 'components/Select';
 import ImageInput from '../ImageInput';
 import Track from './Track';
-
+import DefaultImageInput from './ImageInput';
 import dropdowns from './dropdowns.json';
 import tracks from './tracks';
 
 import './styles.scss';
 
-const countries = getAllCountryObjects();
-
-export default class BasicInfo extends React.Component {
+export default class BasicInfo extends ConsentComponent {
   constructor(props) {
     super(props);
 
@@ -32,19 +29,19 @@ export default class BasicInfo extends React.Component {
     this.onUpdateCountry = this.onUpdateCountry.bind(this);
     this.onUpdateSelect = this.onUpdateSelect.bind(this);
     this.onUpdateInput = this.onUpdateInput.bind(this);
+    this.onHandleSaveBasicInfo = this.onHandleSaveBasicInfo.bind(this);
     this.onSaveBasicInfo = this.onSaveBasicInfo.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onCheckFormValue = this.onCheckFormValue.bind(this);
-    this.onShowUserConsent = this.onShowUserConsent.bind(this);
 
+    const { userTraits } = props;
     this.state = {
-      showUserConsent: false,
       savingBasicInfo: false,
       inputChanged: false,
       formInvalid: false,
       errorMessage: '',
-      basicInfoTrait: this.loadBasicInfoTraits(props.userTraits),
-      personalizationTrait: this.loadPersonalizationTrait(props.userTraits),
+      basicInfoTrait: this.loadBasicInfoTraits(userTraits),
+      personalizationTrait: this.loadPersonalizationTrait(userTraits),
       newBasicInfo: {
         handle: '',
         firstName: '',
@@ -99,9 +96,9 @@ export default class BasicInfo extends React.Component {
 
   onCheckFormValue(newBasicInfo) {
     let invalid = false;
-    let birthDateInvalid = false;
     let errorMessage = '';
     let dateError = '';
+    let birthDateInvalid = false;
 
     if (!_.trim(newBasicInfo.firstName).length) {
       errorMessage += 'FirstName, ';
@@ -113,26 +110,8 @@ export default class BasicInfo extends React.Component {
       invalid = true;
     }
 
-    if (!_.trim(newBasicInfo.gender).length) {
-      errorMessage += 'Gender, ';
-      invalid = true;
-    }
-
-    if (!_.trim(newBasicInfo.tshirtSize).length) {
-      errorMessage += 'T shirt size, ';
-      invalid = true;
-    }
-
-    if (!_.trim(newBasicInfo.addresses[0].streetAddr1).length
-        || !_.trim(newBasicInfo.addresses[0].city).length
-        || !_.trim(newBasicInfo.addresses[0].stateCode).length
-        || !_.trim(newBasicInfo.addresses[0].zip).length) {
-      errorMessage += 'Address Information, ';
-      invalid = true;
-    }
-
-    if (!_.trim(newBasicInfo.currentLocation).length) {
-      errorMessage += 'Current Location, ';
+    if (!_.trim(newBasicInfo.country).length) {
+      errorMessage += 'Country, ';
       invalid = true;
     }
 
@@ -140,9 +119,11 @@ export default class BasicInfo extends React.Component {
       errorMessage += 'cannot be empty';
     }
 
-    if (!_.trim(newBasicInfo.birthDate).length) {
-      dateError += 'Birth Date is incomplete or have an invalid date';
-      birthDateInvalid = true;
+    if (_.trim(newBasicInfo.birthDate).length > 0) {
+      if (!moment().isAfter(newBasicInfo.birthDate)) {
+        dateError = 'Must enter valid date for Birth Date';
+        birthDateInvalid = true;
+      }
     }
 
     if (errorMessage.length > 0) {
@@ -160,26 +141,23 @@ export default class BasicInfo extends React.Component {
    * Show User Consent Modal
    * @param {*} e event
    */
-  onShowUserConsent(e) {
+  onHandleSaveBasicInfo(e) {
     e.preventDefault();
     const { newBasicInfo } = this.state;
     if (this.onCheckFormValue(newBasicInfo)) {
       return;
     }
-    this.setState({ showUserConsent: true });
+    this.showConsent(this.onSaveBasicInfo.bind(this));
   }
 
   /**
    * Save Basic Info
-   * @param e form submit event
    * @param answer user consent answer value
    */
-  onSaveBasicInfo(e, answer) {
-    e.preventDefault();
+  onSaveBasicInfo(answer) {
     const { newBasicInfo, basicInfoTrait, personalizationTrait } = this.state;
     this.setState({
       savingBasicInfo: true,
-      showUserConsent: false,
     });
 
     const {
@@ -188,9 +166,22 @@ export default class BasicInfo extends React.Component {
       addUserTrait,
       updateUserTrait,
     } = this.props;
-    newBasicInfo.birthDate = new Date(newBasicInfo.birthDate).toISOString();
+    try {
+      newBasicInfo.birthDate = `${moment(newBasicInfo.birthDate).format('YYYY-MM-DD')}T00:00:00.000Z`;
+    } catch (error) { // eslint-disable-line
+      newBasicInfo.birthDate = null;
+    }
 
-    if (basicInfoTrait.traits && basicInfoTrait.traits.data.length > 0) {
+    if (newBasicInfo.gender === '') {
+      newBasicInfo.gender = null;
+    }
+
+    if (newBasicInfo.tshirtSize === '') {
+      newBasicInfo.tshirtSize = null;
+    }
+    // This is a hack to check if the user has an existing basic_info trait object
+    if (basicInfoTrait.traits
+      && basicInfoTrait.traits.data.length > 0 && basicInfoTrait.createdAt) {
       const newBasicInfoTrait = { ...basicInfoTrait };
       newBasicInfoTrait.traits.data = [];
       newBasicInfoTrait.traits.data.push(newBasicInfo);
@@ -242,7 +233,7 @@ export default class BasicInfo extends React.Component {
   }
 
   onUpdateCountry(country) {
-    if (country && country.alpha3) {
+    if (country) {
       const { newBasicInfo: oldBasicInfo } = this.state;
       const newBasicInfo = { ...oldBasicInfo };
       newBasicInfo.country = country.name;
@@ -379,8 +370,8 @@ export default class BasicInfo extends React.Component {
       this.setState({ newBasicInfo });
     } else {
       newBasicInfo.handle = handle;
-      newBasicInfo.gender = 'male';
-      newBasicInfo.tshirtSize = 'S';
+      newBasicInfo.gender = '';
+      newBasicInfo.tshirtSize = '';
       newBasicInfo.userId = profile.userId;
       newBasicInfo.status = profile.status;
       newBasicInfo.email = profile.email;
@@ -429,15 +420,219 @@ export default class BasicInfo extends React.Component {
       newBasicInfo,
       formInvalid,
       errorMessage,
-      showUserConsent,
     } = this.state;
 
     return (
       <div styleName="basic-info-container">
         {
-          showUserConsent && (<UserConsentModal onSaveTrait={this.onSaveBasicInfo} />)
+          this.shouldRenderConsent() && this.renderConsent()
         }
-        <div styleName="about-me-container">
+        <div styleName={`error-message ${formInvalid ? 'active' : ''}`}>
+          {errorMessage}
+        </div>
+        <h1>
+          Basic Info
+        </h1>
+        <div styleName="sub-title first">
+          Avatar
+        </div>
+        <div styleName="user-icon">
+          <DefaultImageInput
+            {...this.props}
+          />
+        </div>
+        <div styleName="sub-title second">
+          Personal details
+        </div>
+        <div styleName="form-container-default">
+          <form name="basic-info-form" noValidate autoComplete="off">
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="firstName">
+                  Firstname
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <span styleName="text-required">* Required</span>
+                <input id="firstName" name="firstName" type="text" placeholder="First Name" onChange={this.onUpdateInput} value={newBasicInfo.firstName} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="lastName">
+                  Lastname
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <span styleName="text-required">* Required</span>
+                <input id="lastName" name="lastName" type="text" placeholder="Last Name" onChange={this.onUpdateInput} value={newBasicInfo.lastName} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="birthDate">
+                  Birth Date
+                </label>
+              </div>
+              <div styleName="field col-percent50">
+                <input id="birthDate" styleName="date-input" name="birthDate" type="date" onChange={this.onUpdateInput} value={newBasicInfo.birthDate} required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="address">
+                  Address
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="address" name="streetAddr1" type="text" placeholder="Your address" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].streetAddr1 : ''}`} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="address2">
+                  Address 2
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="address" name="streetAddr2" type="text" styleName="second-addr" placeholder="Your address continued" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].streetAddr2 : ''}`} maxLength="64" />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="city">
+                  City
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="city" name="city" type="text" placeholder="Which city do you live in?" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].city : ''}`} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="state">
+                  State
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="state" name="stateCode" type="text" placeholder="State" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].stateCode : ''}`} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="zipCode">
+                  ZIP
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="zipCode" name="zip" type="text" placeholder="ZIP/Postal Code" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].zip : ''}`} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="country">
+                  Country
+                </label>
+              </div>
+              <div styleName="field col-percent50">
+                <span styleName="text-required">* Required</span>
+                <Select
+                  name="country"
+                  options={dropdowns.countries}
+                  value={newBasicInfo.country}
+                  onChange={this.onUpdateCountry}
+                  placeholder="Country"
+                  matchPos="start"
+                  matchProp="name"
+                  labelKey="name"
+                  valueKey="name"
+                  clearable={false}
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div styleName="sub-title second">
+          About you
+        </div>
+        <div styleName="form-container-default">
+          <form name="basic-info-form" noValidate autoComplete="off">
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="gender">
+                  Gender
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <Select
+                  name="gender"
+                  options={dropdowns.gender}
+                  value={newBasicInfo.gender}
+                  onChange={this.onUpdateSelect}
+                  placeholder="Gender"
+                  labelKey="name"
+                  valueKey="name"
+                  clearable={false}
+                />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="tshirtSize">
+                  T-shirt size
+                </label>
+              </div>
+              <div styleName="field col-percent35">
+                <Select
+                  name="tshirtSize"
+                  options={dropdowns.tshirtSize}
+                  value={newBasicInfo.tshirtSize}
+                  onChange={this.onUpdateSelect}
+                  placeholder="Select your size from chart"
+                  labelKey="name"
+                  valueKey="name"
+                  clearable={false}
+                />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="currentLocation">
+                  Current Location
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="currentLocation" name="currentLocation" type="text" placeholder="Where in the world are you currently?" onChange={this.onUpdateInput} value={newBasicInfo.currentLocation} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="primaryInterestInTopcoder">
+                  Primary interests
+                </label>
+              </div>
+              <div styleName="field col-2">
+                <input id="primaryInterestInTopcoder" name="primaryInterestInTopcoder" type="text" placeholder="List several of your interests, like &quot;Design&quot;, &quot;Development&quot;, &quot;Data Science&quot;" onChange={this.onUpdateInput} value={newBasicInfo.primaryInterestInTopcoder} maxLength="64" required />
+              </div>
+            </div>
+            <div styleName="row">
+              <div styleName="field col-1">
+                <label htmlFor="bio">
+                  Short bio
+                </label>
+              </div>
+              <div styleName="field description">
+                <div styleName="first-line">
+                  <span styleName="description-counts">
+                    {newBasicInfo.description.length}/240
+                  </span>
+                </div>
+                <textarea id="description" styleName="bio-text" name="description" placeholder="In 240 characters or less, tell the Topcoder community a bit about yourself" onChange={this.onUpdateInput} value={newBasicInfo.description} maxLength="240" cols="3" rows="10" required />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div styleName="about-me-container-mobile">
           <div styleName="user-icon">
             <ImageInput
               {...this.props}
@@ -445,7 +640,7 @@ export default class BasicInfo extends React.Component {
           </div>
           <div styleName="form-container">
             <p styleName="handle">
-              { newBasicInfo.handle }
+              {newBasicInfo.handle}
             </p>
             <div styleName="mb-user-card">
               <ImageInput
@@ -461,10 +656,10 @@ export default class BasicInfo extends React.Component {
                 </div>
                 <div styleName="main">
                   <p styleName="user-handle">
-                    { newBasicInfo.handle }
+                    {newBasicInfo.handle}
                   </p>
                   <div styleName={`error-message ${formInvalid ? 'active' : ''}`}>
-                    { errorMessage }
+                    {errorMessage}
                   </div>
                   <div styleName="row">
                     <div styleName="field">
@@ -502,14 +697,12 @@ export default class BasicInfo extends React.Component {
                 <div styleName="field">
                   <label htmlFor="birthDate">
                     Birth Date
-                    <span styleName="text-required">* Required</span>
                   </label>
                   <input id="birthDate" styleName="date-input" name="birthDate" type="date" onChange={this.onUpdateInput} value={newBasicInfo.birthDate} required />
                 </div>
                 <div styleName="field">
                   <label htmlFor="gender">
                     Gender
-                    <span styleName="text-required">* Required</span>
                   </label>
                   <Select
                     name="gender"
@@ -525,7 +718,6 @@ export default class BasicInfo extends React.Component {
                 <div styleName="field">
                   <label htmlFor="tshirtSize">
                     T-Shirt-Size
-                    <span styleName="text-required">* Required</span>
                   </label>
                   <Select
                     name="tshirtSize"
@@ -543,7 +735,6 @@ export default class BasicInfo extends React.Component {
                 <div styleName="field">
                   <label htmlFor="address">
                     Address
-                    <span styleName="text-required">* Required</span>
                   </label>
                   <input id="address" name="streetAddr1" type="text" placeholder="Address Line 1" onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].streetAddr1 : ''}`} maxLength="64" required />
                   <input id="address" name="streetAddr2" type="text" styleName="second-addr" placeholder="Address Line 2  " onChange={this.onUpdateInput} value={`${newBasicInfo.addresses.length > 0 ? newBasicInfo.addresses[0].streetAddr2 : ''}`} maxLength="64" />
@@ -553,10 +744,11 @@ export default class BasicInfo extends React.Component {
                 <div styleName="field">
                   <label htmlFor="country">
                     Country
+                    <span styleName="text-required">* Required</span>
                   </label>
                   <Select
                     name="country"
-                    options={countries}
+                    options={dropdowns.countries}
                     value={newBasicInfo.country}
                     onChange={this.onUpdateCountry}
                     placeholder="Country"
@@ -592,7 +784,6 @@ export default class BasicInfo extends React.Component {
                 <div styleName="field">
                   <label htmlFor="currentLocation">
                     Current Location
-                    <span styleName="text-required">* Required</span>
                   </label>
                   <input id="currentLocation" name="currentLocation" type="text" placeholder="current Location" onChange={this.onUpdateInput} value={newBasicInfo.currentLocation} maxLength="64" required />
                 </div>
@@ -645,7 +836,7 @@ export default class BasicInfo extends React.Component {
           <PrimaryButton
             styleName="white-label"
             disabled={false}
-            onClick={this.onShowUserConsent}
+            onClick={this.onHandleSaveBasicInfo}
           >
             {
               'Save Changes'

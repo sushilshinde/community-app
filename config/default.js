@@ -6,7 +6,7 @@ module.exports = {
   API: {
     V2: 'https://api.topcoder-dev.com/v2',
     V3: 'https://api.topcoder-dev.com/v3',
-    V4: 'https://api.topcoder-dev.com/v4',
+    V5: 'https://api.topcoder-dev.com/v5',
   },
 
   /* Auth0 config */
@@ -25,11 +25,6 @@ module.exports = {
     PUBLIC: 'https://d1aahxkjiobka8.cloudfront.net',
   },
 
-  /* Time in MS to wait before refreshing challenge details after register
-   * and unregister.  Used to allow API sufficent time to update.
-   */
-  CHALLENGE_DETAILS_REFRESH_DELAY: 3000,
-
   COOKIES: {
     /* Expiration time [days] for browser cookies set by the App. */
     MAXAGE: 7,
@@ -45,12 +40,9 @@ module.exports = {
 
   CONTENTFUL: {
     LOCAL_MODE: false,
+    DEFAULT_SPACE_NAME: 'default',
+    DEFAULT_ENVIRONMENT: 'master',
   },
-
-  /**
-   * Disable PWA service worker.
-   */
-  DISABLE_SERVICE_WORKER: false,
 
   /* API token for logentries.com. The token below is just for local testing of
    * the setup. To override it use LOG_ENTRIES_TOKEN environment variable. */
@@ -126,7 +118,7 @@ module.exports = {
       RELIABILITY_RATINGS_AND_BONUSES: 'https://help.topcoder.com/hc/en-us/articles/219240797-Development-Reliability-Ratings-and-Bonuses',
       STOCK_ART_POLICY: 'http://help.topcoder.com/hc/en-us/articles/217481408-Policy-for-Stock-Artwork-in-Design-Submissions',
       STUDIO_FONTS_POLICY:
-      'http://help.topcoder.com/hc/en-us/articles/217959447-Font-Policy-for-Design-Challenges',
+        'http://help.topcoder.com/hc/en-us/articles/217959447-Font-Policy-for-Design-Challenges',
       TOPCODER_TERMS: 'https://www.topcoder.com/community/how-it-works/terms/',
     },
 
@@ -156,17 +148,35 @@ module.exports = {
   FILESTACK: {
     API_KEY: 'AzFINuQoqTmqw0QEoaw9az',
     REGION: 'us-east-1',
-    SUBMISSION_CONTAINER: 'submission-staging-dev',
+    SUBMISSION_CONTAINER: 'topcoder-dev-submissions-dmz',
   },
 
   /* Secret part of the configuration. Nest into this section any sensitive
    * parameters that should never be send to the client side. */
   SECRET: {
-    /* Space ID and API keys for Contenful CMS. */
     CONTENTFUL: {
-      CDN_API_KEY: '',
-      PREVIEW_API_KEY: '',
-      SPACE_ID: '',
+      default: { // Human-readable name of space
+        SPACE_ID: '',
+        master: { // Name of an environment
+          CDN_API_KEY: '',
+          PREVIEW_API_KEY: '',
+        },
+      },
+      /* Contentful Space for TopGear community content. */
+      topgear: {
+        SPACE_ID: '',
+        master: {
+          CDN_API_KEY: '',
+          PREVIEW_API_KEY: '',
+        },
+      },
+    },
+
+    MAILCHIMP: {
+      default: {
+        API_KEY: '',
+        MAILCHIMP_BASE_URL: '',
+      },
     },
 
     OPEN_EXCHANGE_RATES_KEY: '',

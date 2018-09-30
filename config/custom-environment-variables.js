@@ -8,7 +8,7 @@ module.exports = {
   AUTH0: {
     CLIENT_ID: 'AUTH0_CLIENT_ID',
   },
-  DISABLE_SERVICE_WORKER: 'DISABLE_SERVICE_WORKER',
+
   LOG_ENTRIES_TOKEN: 'LOG_ENTRIES_TOKEN',
   MOCK_TERMS_SERVICE: 'MOCK_TERMS_SERVICE',
 
@@ -28,10 +28,29 @@ module.exports = {
   SERVER_API_KEY: 'SERVER_API_KEY',
 
   SECRET: {
+
     CONTENTFUL: {
-      CDN_API_KEY: 'CONTENTFUL_CDN_API_KEY',
-      PREVIEW_API_KEY: 'CONTENTFUL_PREVIEW_API_KEY',
-      SPACE_ID: 'CONTENTFUL_SPACE_ID',
+      default: {
+        SPACE_ID: 'CONTENTFUL_SPACE_ID',
+        master: {
+          CDN_API_KEY: 'CONTENTFUL_CDN_API_KEY',
+          PREVIEW_API_KEY: 'CONTENTFUL_PREVIEW_API_KEY',
+        },
+      },
+      topgear: {
+        SPACE_ID: 'CONTENTFUL_TOPGEAR_SPACE_ID',
+        master: {
+          CDN_API_KEY: 'CONTENTFUL_TOPGEAR_CDN_API_KEY',
+          PREVIEW_API_KEY: 'CONTENTFUL_TOPGEAR_PREVIEW_API_KEY',
+        },
+      },
+    },
+
+    MAILCHIMP: {
+      default: {
+        API_KEY: 'MAILCHIMP_API_KEY',
+        MAILCHIMP_BASE_URL: 'MAILCHIMP_BASE_URL',
+      },
     },
 
     OPEN_EXCHANGE_RATES_KEY: 'OPEN_EXCHANGE_RATES_KEY',

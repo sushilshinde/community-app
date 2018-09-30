@@ -13,6 +13,7 @@ import { fixStyle } from 'utils/contentful';
 import Quote from 'components/Contentful/Quote';
 import Video from 'components/Contentful/Video';
 import Menu from 'components/Contentful/Menu';
+import BlogFeed from 'containers/Contentful/BlogFeed';
 import { errors } from 'topcoder-react-lib';
 import LoadingIndicator from 'components/LoadingIndicator';
 import PT from 'prop-types';
@@ -35,6 +36,7 @@ const COMPONENTS = {
   appComponent: AppComponentLoader,
   banner: Banner,
   blogPost: BlogPost,
+  blogFeed: BlogFeed,
   challengesBlock: ChallengesBlock,
   contentBlock: ContentBlock,
   countdown: Countdown,
@@ -57,6 +59,8 @@ function ViewportContentLoader(props) {
   const {
     contentIds,
     preview,
+    spaceName,
+    environment,
     themeName,
     grid,
     baseUrl,
@@ -82,6 +86,8 @@ function ViewportContentLoader(props) {
     <ContentfulLoader
       entryIds={contentIds}
       preview={preview}
+      spaceName={spaceName}
+      environment={environment}
       render={data => (
         <Viewport
           extraStylesForContainer={fixStyle(extraStylesForContainer)}
@@ -95,9 +101,11 @@ function ViewportContentLoader(props) {
                 return (
                   <Component
                     baseUrl={baseUrl}
+                    environment={environment}
                     id={id}
                     key={id}
                     preview={preview}
+                    spaceName={spaceName}
                   />
                 );
               }
@@ -116,6 +124,8 @@ function ViewportContentLoader(props) {
 
 ViewportContentLoader.defaultProps = {
   extraStylesForContainer: null,
+  spaceName: null,
+  environment: null,
   themeName: 'Column',
   grid: PT.shape({
     columns: 3,
@@ -127,6 +137,8 @@ ViewportContentLoader.propTypes = {
   contentIds: PT.arrayOf(PT.string.isRequired).isRequired,
   extraStylesForContainer: PT.shape(),
   preview: PT.bool.isRequired,
+  spaceName: PT.string,
+  environment: PT.string,
   themeName: PT.string,
   grid: PT.shape(),
   baseUrl: PT.string.isRequired,
@@ -137,6 +149,8 @@ function ViewportLoader(props) {
   const {
     id,
     preview,
+    spaceName,
+    environment,
     query,
     baseUrl,
   } = props;
@@ -155,6 +169,8 @@ function ViewportLoader(props) {
     <ContentfulLoader
       entryQueries={queries}
       preview={preview}
+      spaceName={spaceName}
+      environment={environment}
       render={data => _.map(data.entries.items, viewport => (
         <ViewportContentLoader
           {...props}
@@ -162,6 +178,8 @@ function ViewportLoader(props) {
           extraStylesForContainer={viewport.fields.extraStylesForContainer}
           key={viewport.sys.id}
           preview={preview}
+          spaceName={spaceName}
+          environment={environment}
           themeName={viewport.fields.theme}
           grid={{
             columns: viewport.fields.gridColumns,
@@ -180,6 +198,8 @@ COMPONENTS.viewport = ViewportLoader;
 ViewportLoader.defaultProps = {
   id: null,
   preview: false,
+  spaceName: null,
+  environment: null,
   query: null,
   baseUrl: '',
 };
@@ -187,6 +207,8 @@ ViewportLoader.defaultProps = {
 ViewportLoader.propTypes = {
   id: PT.string,
   preview: PT.bool,
+  spaceName: PT.string,
+  environment: PT.string,
   query: PT.shape(),
   baseUrl: PT.string,
 };

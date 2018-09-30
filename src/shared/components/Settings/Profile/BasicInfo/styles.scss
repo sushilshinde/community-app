@@ -4,26 +4,154 @@
   display: flex;
   flex-direction: column;
 
-  @include xs-to-sm {
+  @include upto-sm {
     padding: 20px;
     border-bottom: 1px solid $tc-gray-10;
   }
+
+  h1 {
+    @include roboto-regular;
+
+    font-size: 28px;
+    line-height: 35px;
+    font-weight: 400;
+    color: $tc-black;
+    margin-bottom: 20px;
+
+    @include upto-sm {
+      display: none;
+    }
+  }
+
+  .sub-title {
+    @include roboto-light;
+
+    color: #888894;
+    line-height: 35px;
+    font-weight: 300;
+    font-size: 28px;
+    margin-bottom: 10px;
+
+    &.second {
+      margin-top: 40px;
+      margin-bottom: 30px;
+    }
+
+    &.first {
+      margin-bottom: 30px;
+      margin-top: 10px;
+    }
+
+    &.hidden {
+      display: none;
+    }
+
+    @include upto-sm {
+      display: none;
+    }
+  }
 }
 
-.about-me-container {
-  display: flex;
-  align-items: flex-start;
+.error-message {
+  display: none;
+
+  &.active {
+    @include roboto-medium;
+
+    display: block;
+    border-radius: 5px;
+    background-color: $tc-red-10;
+    color: $tc-red-110;
+    font-size: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+.form-container-default {
+  @include form-container-default;
+
+  input {
+    @include roboto-regular;
+
+    height: 40px;
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 400;
+    color: $tc-black;
+    border: 1px solid $tc-gray-20;
+    border-radius: $corner-radius * 2 $corner-radius * 2 $corner-radius * 2 $corner-radius * 2;
+    margin-bottom: 0;
+  }
+
+  .text-required {
+    @include roboto-medium;
+
+    font-size: 10px;
+    color: $tc-red-110;
+    margin-bottom: 5px;
+    text-align: right;
+  }
+
+  .text-optional {
+    @include roboto-medium;
+
+    font-size: 10px;
+    color: #888894;
+    margin-bottom: 5px;
+    text-align: right;
+  }
+
+  .description {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+
+    .first-line {
+      display: flex;
+      justify-content: flex-end;
+
+      .description-counts {
+        @include roboto-medium;
+
+        font-size: 11px;
+        color: $tc-dark-blue-110;
+        text-align: right;
+      }
+    }
+
+    .bio-text {
+      height: 169px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      width: 100%;
+      resize: vertical;
+    }
+  }
+
+  .user-icon {
+    width: 100%;
+  }
+}
+
+.about-me-container-mobile {
+  display: none;
+
+  @include upto-sm {
+    display: flex;
+    align-items: flex-start;
+  }
 
   @include sofia-pro-light;
 
   .user-icon {
     margin-right: 40px;
 
-    @include md-to-lg {
+    @include from-sm-to-lg {
       display: none;
     }
 
-    @include xs-to-sm {
+    @include upto-sm {
       display: none;
     }
   }
@@ -59,11 +187,11 @@
       color: $tc-black;
       margin-bottom: 20px;
 
-      @include md-to-lg {
+      @include from-sm-to-lg {
         display: none;
       }
 
-      @include xs-to-sm {
+      @include upto-sm {
         display: none;
       }
     }
@@ -72,7 +200,7 @@
       display: flex;
       margin-bottom: 10px;
 
-      @include xs-to-sm {
+      @include upto-sm {
         width: 100%;
         display: block;
         margin-bottom: 0;
@@ -84,7 +212,7 @@
         flex-direction: column;
         margin-right: 10px;
 
-        @include xs-to-sm {
+        @include upto-sm {
           display: block;
           margin-right: 0;
           padding-bottom: 10px;
@@ -127,7 +255,7 @@
       color: $tc-black;
       border-radius: $corner-radius * 2 $corner-radius * 2 $corner-radius * 2 $corner-radius * 2;
 
-      @include xs-to-sm {
+      @include upto-sm {
         margin-top: 5px;
       }
     }
@@ -139,7 +267,7 @@
     .mb-user-card {
       display: none;
 
-      @include xs-to-sm {
+      @include upto-sm {
         display: block;
         margin-bottom: 15px;
       }
@@ -150,18 +278,18 @@
       flex-direction: row;
       margin-bottom: 10px;
 
-      @include md-to-lg {
+      @include from-sm-to-lg {
         margin-bottom: 15px;
       }
 
-      @include xs-to-sm {
+      @include upto-sm {
         margin-bottom: 0;
       }
 
       .img-container {
         display: none;
 
-        @include md-to-lg {
+        @include from-sm-to-lg {
           display: block;
         }
       }
@@ -170,7 +298,7 @@
         display: block;
         width: 100%;
 
-        @include md-to-lg {
+        @include from-sm-to-lg {
           display: flex;
           flex-direction: column;
         }
@@ -179,7 +307,7 @@
       p.user-handle {
         display: none;
 
-        @include md-to-lg {
+        @include from-sm-to-lg {
           @include roboto-regular;
 
           display: block;
@@ -266,7 +394,7 @@
     font-weight: 500;
     margin: 0;
     padding: 0;
-    width: 155px;
+    width: 170px;
   }
 
   .white-label {
@@ -286,7 +414,7 @@
   color: $tc-gray-80;
   font-size: 15px;
 
-  @include xs-to-sm {
+  @include upto-sm {
     margin-top: 5px;
   }
 }
@@ -302,8 +430,8 @@
     height: 38px;
     line-height: 40px !important;
 
-    @include xs-to-sm {
-      line-height: 27px !important;
+    @include upto-sm {
+      line-height: 38px !important;
     }
   }
 
@@ -314,4 +442,11 @@
 
 .basic-info-container .form-container .row .field :global .Select-placeholder {
   color: $tc-gray-50;
+}
+
+.col-1,
+.col-2,
+.col-percent50,
+.col-percent35 {
+  width: auto;
 }

@@ -30,10 +30,10 @@ import './styles.scss';
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-
+    this.previousSelectedTab = null;
     this.state = {
       isMobileView: false,
-      screenSM: 768,
+      screenSM: 767,
     };
 
     this.updatePredicate = this.updatePredicate.bind(this);
@@ -43,10 +43,18 @@ class Profile extends React.Component {
   componentDidMount() {
     this.updatePredicate();
     window.addEventListener('resize', this.updatePredicate);
+    const {
+      clearToastrNotification,
+    } = this.props;
+    clearToastrNotification();
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updatePredicate);
+    const {
+      clearToastrNotification,
+    } = this.props;
+    clearToastrNotification();
   }
 
   updatePredicate() {
@@ -61,6 +69,7 @@ class Profile extends React.Component {
     const {
       settingsUI: { currentProfileTab, TABS },
       toggleProfileSideTab,
+      clearToastrNotification,
     } = this.props;
     const tabs = TABS.PROFILE;
     const names = Object.keys(tabs).map(key => tabs[key]);
@@ -72,12 +81,16 @@ class Profile extends React.Component {
       education: <EducationIcon />,
       work: <WorkIcon />,
       organization: <OrganizationIcon />,
-      skill: <SkillIcon />,
-      hobby: <HobbyIcon />,
-      community: <CommunityIcon />,
+      skills: <SkillIcon />,
+      hobbies: <HobbyIcon />,
+      communities: <CommunityIcon />,
     };
 
     const renderTabContent = (tab) => {
+      if (this.previousSelectedTab !== tab) {
+        clearToastrNotification();
+      }
+      this.previousSelectedTab = tab;
       switch (tab) {
         case 'basic info':
           return <BasicInfo {...this.props} />;
@@ -87,13 +100,13 @@ class Profile extends React.Component {
           return <Education {...this.props} />;
         case 'work':
           return <Work {...this.props} />;
-        case 'skill':
+        case 'skills':
           return <Skills {...this.props} />;
-        case 'community':
+        case 'communities':
           return <Community {...this.props} />;
         case 'organization':
           return <Organization {...this.props} />;
-        case 'hobby':
+        case 'hobbies':
           return <Hobby {...this.props} />;
         default:
           return <ComingSoon />;
@@ -135,6 +148,7 @@ class Profile extends React.Component {
 Profile.propTypes = {
   settingsUI: PT.shape().isRequired,
   toggleProfileSideTab: PT.func.isRequired,
+  clearToastrNotification: PT.func.isRequired,
 };
 
 export default Profile;

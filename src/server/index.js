@@ -18,6 +18,7 @@ import { getRates as getExchangeRates } from 'services/money';
 import { toJson as xmlToJson } from 'utils/xml2json';
 
 import cdnRouter from './routes/cdn';
+import mailChimpRouter from './routes/mailchimp';
 import mockDocuSignFactory from './__mocks__/docu-sign-mock';
 
 /* Dome API for topcoder communities */
@@ -111,6 +112,7 @@ async function onExpressJsSetup(server) {
   });
 
   server.use('/api/cdn', cdnRouter);
+  server.use('/api/mailchimp', mailChimpRouter);
 
   // serve demo api
   server.use(
@@ -121,11 +123,6 @@ async function onExpressJsSetup(server) {
       next();
     },
     tcCommunitiesDemoApi,
-  );
-
-  server.use(
-    '/community-app-assets/api/edit-contentful-entry/:id',
-    (req, res) => res.redirect(`${CMS_BASE_URL}/entries/${req.params.id}`),
   );
 
   server.use(
