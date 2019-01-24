@@ -310,7 +310,7 @@ export class ListingContainer extends React.Component {
         { !listingOnly ? (
           <NewsletterSignup
             title="Sign up for our newsletter"
-            text="Don’t miss out on the latest Topcoder IOS challenges and information!"
+            text="Don’t miss out on the latest Topcoder challenges and information!"
             imageSrc="/community-app-assets/themes/wipro/subscribe-bg.jpg"
           />
         ) : null }
