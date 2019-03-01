@@ -203,6 +203,7 @@ workflows:
                 - hot-fixes
                 - develop
                 - performance-project
+                - pwa-issues
       # Production builds are exectuted only on tagged commits to the
       # master branch.
       - "build-prod":
