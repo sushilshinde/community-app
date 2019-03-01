@@ -87,13 +87,13 @@ workbox.routing.registerRoute(/\/challenges(\/)?(\?.*)?$/, async ({ event, url }
 }, 'GET');
 
 // Serve challenge details pages like: /challenges/12345678
-workbox.routing.registerRoute(/\/challenges\/\d+(\/)?(.*)/, async ({ event, url }) => {
+/*workbox.routing.registerRoute(/\/challenges\/\d+(\/)?(.*)/, async ({ event, url }) => {
   if (url.pathname.endsWith('/')) {
     // Remove ending '/' char
     url.pathname = url.pathname.substring(0, url.pathname.length - 1);
   }
   return challengesHandler(event, url, true);
-}, 'GET');
+}, 'GET');*/
 
 // Cache fonts
 // (Note when deployed in production, the static assets will be served by cloudfront CDN)
