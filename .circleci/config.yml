@@ -175,6 +175,7 @@ workflows:
             branches:
               only: 
                 - develop
+                - m2m_lib_change
       # This is alternate dev env for parallel testing
       - "build-test":
           context : org-global      
@@ -191,6 +192,7 @@ workflows:
               only:
                 - hot-fixes
                 - develop
+                - m2m_lib_change
       # Production builds are exectuted only on tagged commits to the
       # master branch.
       - "build-prod":
