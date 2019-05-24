@@ -184,6 +184,7 @@ workflows:
                 - hot-fixes
                 - legacy-tco
                 - hot-fixes-cherry-24may
+                  - legacy-tco
       # This is beta env for production soft releases
       - "build-prod-beta":
           context : org-global
@@ -194,6 +195,7 @@ workflows:
                 - develop
                 - general-features
                 - hot-fixes-cherry-24may
+                - develop-from-master-23may
       # Production builds are exectuted only on tagged commits to the
       # master branch.
       - "build-prod":
