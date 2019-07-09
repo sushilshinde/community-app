@@ -56,37 +56,141 @@ module.exports = {
   FILESTACK: {
     SUBMISSION_CONTAINER: 'topcoder-submissions-dmz',
   },
-  SECONDARY_MENU_FOR_LOGGED_USER: [
+  HEADER_MENU: [
     {
-      title: 'Dashboard',
-      href: '/my-dashboard',
+      id: 'business',
+      title: 'BUSINESS',
+      href: 'https://www.topcoder.com',
     },
     {
-      id: 'myprofile',
-      title: 'My Profile',
-      href: '/members/',
-    },
-    {
-      title: 'Payments',
-      href: 'https://community.topcoder.com/PactsMemberServlet?module=PaymentHistory&full_list=false',
+      id: 'community', // required for 'Switch to BUSINESS' to work
+      title: 'COMMUNITY',
+      secondaryMenuForLoggedInUser: [
+        {
+          title: 'Dashboard',
+          href: '/my-dashboard',
+        },
+        {
+          id: 'myprofile',
+          title: 'My Profile',
+          href: '/members/willFilledByUserName',
+        },
+        {
+          title: 'Payments',
+          href: 'https://community.topcoder.com/PactsMemberServlet?module=PaymentHistory&full_list=false',
+        },
+      ],
+      secondaryMenuForGuest: [
+        {
+          title: 'Overview',
+          href: 'https://www.topcoder.com/about',
+        },
+        {
+          title: 'How It Works',
+          href: 'https://www.topcoder.com/how-it-works/faqs/',
+        },
+        {
+          title: 'Tracks',
+          href: '/community/learn',
+        },
+        {
+          title: 'Why Join',
+          href: 'https://www.topcoder.com/about/why-crowdsourcing/',
+        },
+      ],
+      subMenu: [
+        {
+          title: 'Compete',
+          subMenu: [
+            {
+              title: 'All Challenges',
+              href: '/challenges',
+            },
+            {
+              title: 'Competitive Programming',
+              href: 'https://arena.topcoder.com',
+            },
+          ],
+        },
+        {
+          title: 'Tracks',
+          subMenu: [
+            {
+              title: 'Competitive Programming',
+              href: '/community/competitive-programming',
+            },
+            {
+              title: 'Data Science',
+              href: '/community/data-science',
+            },
+            {
+              title: 'Design',
+              href: '/community/design',
+            },
+            {
+              title: 'Development',
+              href: '/community/development',
+            },
+            {
+              title: 'QA',
+              href: '/community/qa',
+            },
+          ],
+        },
+        {
+          title: 'Explore',
+          subMenu: [
+            {
+              title: 'TCO',
+              href: 'https://www.topcoder.com/tco',
+            },
+            {
+              title: 'Programs',
+              href: '/community/member-programs',
+            },
+            {
+              title: 'Forums',
+              href: 'https://apps.topcoder.com/forums',
+            },
+            {
+              title: 'Statistics',
+              href: '/community/statistics',
+            },
+            {
+              title: 'Events',
+              href: '/community/events',
+            },
+            {
+              title: 'Blog',
+              href: 'https://www.topcoder.com/blog',
+            },
+          ],
+        },
+      ],
     },
   ],
-  SECONDARY_MENU_FOR_GUEST: [
+  HEADER_MENU_THEME: 'light',
+  HEADER_AUTH_URLS: {
+    href: 'https://accounts.topcoder.com/member/registration?utm_source=community-app-main',
+    location: 'https://accounts.topcoder.com/member?retUrl=%S&utm_source=community-app-main',
+  },
+  ACCOUNT_MENU: [
     {
-      title: 'Overview',
-      href: 'https://www.topcoder.com/about',
+      title: 'Settings',
+      href: '/settings/profile',
+    },
+    { separator: true },
+    {
+      title: 'Help',
+      href: 'https://help.topcoder.com/',
     },
     {
-      title: 'How It Works',
-      href: 'https://www.topcoder.com/how-it-works/faqs/',
+      title: 'About Topcoder',
+      href: 'https://www.topcoder.com/about/',
     },
     {
-      title: 'Tracks',
-      href: '/community/learn',
-    },
-    {
-      title: 'Why Join',
-      href: 'https://www.topcoder.com/about/why-crowdsourcing/',
+      title: 'Log Out',
+      href: 'https://www.topcoder.com/logout',
     },
   ],
   ACCOUNT_MENU_SWITCH_TEXT: {
