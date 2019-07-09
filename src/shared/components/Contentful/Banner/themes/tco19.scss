@@ -61,7 +61,7 @@ $contentWrapperPadding: 0;
       h4 {
         font-size: 20px;
         font-weight: 400;
-        line-height: 35px;
+        line-height: 30px;
       }
 
       h5 {
@@ -72,27 +72,28 @@ $contentWrapperPadding: 0;
 
       h6 {
         font-size: 13px;
-        font-weight: 400;
+        font-weight: 700;
         line-height: 25px;
       }
 
       p {
-        font-size: 20px;
+        font-size: 15px;
         margin-bottom: 1em;
         line-height: 25px;
+
+        strong {
+          font-weight: bold;
+        }
+
+        em {
+          font-style: italic;
+        }
       }
 
       ul {
         list-style: disc;
         margin-bottom: 1em;
         margin-left: 20px;
-
-        li {
-          p {
-            font-size: 16px;
-            line-height: 27px;
-          }
-        }
       }
 
       input {

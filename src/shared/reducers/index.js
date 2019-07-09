@@ -130,6 +130,9 @@ export function factory(req) {
     topcoderHeader,
     rss,
     toastr: toastrReducer,
+    newsletterArchive,
+    menuNavigation,
+    challengesBlock,
   }));
 }
 
