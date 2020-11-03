@@ -51,7 +51,7 @@
     "filestack-react": "^2.0.0",
     "helmet": "^3.12.1",
     "highlight.js": "^9.13.1",
-    "html-to-text": "^3.3.0",
+    "html-to-text": "^6.0.0",
     "i18n-iso-countries": "^3.7.1",
     "immutable": "^3.8.2",
     "isomorphic-fetch": "^2.2.1",
