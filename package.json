@@ -105,7 +105,7 @@
     "shortid": "^2.2.8",
     "showdown": "^1.8.6",
     "slick-carousel": "^1.8.1",
-    "supertest": "^3.1.0",
+    "supertest": "^7.0.0",
     "tc-accounts": "git+https://github.com/appirio-tech/accounts-app.git#dev",
     "topcoder-react-lib": "^0.7.15",
     "topcoder-react-ui-kit": "^0.5.10",
